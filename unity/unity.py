@@ -1,12 +1,33 @@
 import requests
 
 
-class Unity:
+class Unity(object):
+    """
+    Object instantiation
+    """
     def __init__(self, name, user, password):
         self.name = name
         self.user = user
         self.password = password
         self.session = None
+
+    def __getattr__(self, attr):
+        """
+        Custom __getattr__ function.  This allows collection queries
+        using the dot notation.
+        :param attr:
+
+        :return:
+            Either return the argument already collected, or query the
+            system
+        """
+        if attr in self.__dict__:
+            return self.__dict__[attr]
+        else:
+            if self.session is None:
+                print('Not connected.')
+            else:
+                return Unity.get_collection(self, attr)
 
     def connect(self):
         """
@@ -18,6 +39,7 @@ class Unity:
         Todo:
             - Should we return the results of the GET that we use to login
                 (the system collection)?
+            - We need to add some code to process the HTTP response
 
         :returns
             If the connection is successful, it will set the 'session' property
@@ -81,7 +103,9 @@ class Unity:
         return response.json()
 
     def delete_instance(self, resource, rid, payload=None):
-        payload = payload or {'compact': 'true'}
+        payload = payload or {}
         endpoint = 'https://{}/{}/{}/{}'.format(self.name, 'api/instances', resource, rid)
         response = self.session.delete(endpoint, params=payload)
         return response.json()
+
+    def
