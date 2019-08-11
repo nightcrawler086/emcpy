@@ -138,6 +138,41 @@ class Unity(object):
         response = self.session.delete(endpoint, params=payload)
         return response.json()
 
+    def get_resource(self, resource, name=None, rid=None, **kwargs):
+        """
+        Generic query function.  We can use this to query any instance or
+        collection in the system.  This first positional parameter is the
+        resource we're querying.  Function can query by name or ID.  If
+        no name or ID is specified, then the collection is queried.
+
+        For a list of resources to query, look at the API documentation:
+
+        https://<UNITY_HOSTNAME>/apidocs/index.html
+
+        :param resource:  Type of the resource to query
+        :param name: Name of the resource to query (optional)
+        :param rid: Internal ID (rid = Resource ID) to query (optional)
+        :param kwargs: Additional accepted keyword arguments to modify the query:
+                        fields:  Comma separated list of fields to return
+                        filter:  Filter for the query
+                        groupby:  Group the results by a property
+                        compact:  If true, metadata is ignored (instance queries only)
+        :return: A query by name, id, or the entire collection will return
+                    the object's ID, if no other fields are specified.  If
+                    other fields are specified, and they are available via
+                    this resource, they will be returned.
+        """
+        res = resource
+        if name and rid:
+            print('You cannot specify both a name and an ID.')
+            return
+        elif name:
+            return self._get_instance(res, rname=name, payload=kwargs)
+        elif rid:
+            return self._get_instance(res, rid=rid, payload=kwargs)
+        else:
+            return self._get_collection(res, payload=kwargs)
+
     # Configuring network communication
     def get_cifsServer(self, name=None, rid=None, **kwargs):
         """
