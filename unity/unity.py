@@ -3,7 +3,7 @@ import requests
 
 class Unity(object):
     """
-    Object instantiation
+    Initializes the object.
     """
     def __init__(self, name, user, password):
         self.name = name
@@ -13,13 +13,30 @@ class Unity(object):
 
     def __getattr__(self, attr):
         """
-        Custom __getattr__ function.  This allows collection queries
-        using the dot notation.
-        :param attr:
+        This is a handy little function that can be used as a discovery
+        mechanism.  It allows easy exploration of the objects in the
+        Unity REST API.
 
-        :return:
-            Either return the argument already collected, or query the
-            system
+        Example:
+            Instantiate the object:
+
+                > unity = unity('hostname', user, password)
+
+            Login to the API:
+
+                > unity.connect()
+
+            View the 'filesystem' resource from the API:
+
+                > unity.filesystem
+
+        This function does have a weakness currently.  The Unity REST API
+        only returns the ID attribute by default, unless the GET request
+        specifies more properties.  This function would be more useful if
+        all properties were returned for each resource.
+
+        @todo -> Come up with a way to return al properties of each object
+                explored with this function
         """
         if attr in self.__dict__:
             return self.__dict__[attr]
