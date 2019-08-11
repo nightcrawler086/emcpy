@@ -138,13 +138,6 @@ class Unity(object):
         response = self.session.delete(endpoint, params=payload)
         return response.json()
 
-    """
-    Copied from github for reference
-    def cifsServer(self, item_filter=None, item_id=None, item_name=None):
-        return self.get_object('cifsServer', item_filter=item_filter,
-                               item_id=item_id, item_name=item_name)
-    """
-
     # Configuring network communication
     def get_cifsServer(self, name=None, rid=None, **kwargs):
         """
@@ -156,9 +149,86 @@ class Unity(object):
                         filter:  Filter for the query
                         groupby:  Group the results by a property
                         compact:  If true, metadata is ignored (instance queries only)
-        :return:
+        :return: A query by name, id, or the entire collection will return
+                    the object's ID, if no other fields are specified.  If
+                    other fields are specified, and they are available via
+                    this resource, they will be returned as well
         """
         res = 'cifsServer'
+        if name and rid:
+            print('You cannot specify both a name and an ID.')
+            return
+        elif name:
+            return self._get_instance(res, rname=name, payload=kwargs)
+        elif rid:
+            return self._get_instance(res, rid=rid, payload=kwargs)
+        else:
+            return self._get_collection(res, payload=kwargs)
+
+    def get_dnsServer(self, rid=None, **kwargs):
+        """
+        Query the system for DNS Servers
+        :param rid: Resource ID (internal ID) of the DNS server to query (optional)
+        :param kwargs: Additional accepted keyword arguments to modify the query:
+                        fields:  Comma separated list of fields to return
+                        filter:  Filter for the query
+                        groupby:  Group the results by a property
+                        compact:  If true, metadata is ignored (instance queries only)
+        :return: A query by id, or the entire collection will return
+                    the object's ID, if no other fields are specified.  If
+                    other fields are specified, and they are available via
+                    this resource, they will be returned as well
+        """
+        res = 'dnsServer'
+        @todo - Copy/pasted this function.  Need to test
+        if name and rid:
+            print('You cannot specify both a name and an ID.')
+            return
+        elif rid:
+            return self._get_instance(res, rid=rid, payload=kwargs)
+        else:
+            return self._get_collection(res, payload=kwargs)
+
+    def get_fileDNSServer(self, rid=None, **kwargs):
+        """
+        Query the system for DNS Servers
+        :param rid: Resource ID (internal ID) of the DNS server to query (optional)
+        :param kwargs: Additional accepted keyword arguments to modify the query:
+                        fields:  Comma separated list of fields to return
+                        filter:  Filter for the query
+                        groupby:  Group the results by a property
+                        compact:  If true, metadata is ignored (instance queries only)
+        :return: A query by id, or the entire collection will return
+                    the object's ID, if no other fields are specified.  If
+                    other fields are specified, and they are available via
+                    this resource, they will be returned as well
+        """
+        res = 'fileDNSServer'
+        @todo - Copy/pasted this function.  Need to test
+        if name and rid:
+            print('You cannot specify both a name and an ID.')
+            return
+        elif rid:
+            return self._get_instance(res, rid=rid, payload=kwargs)
+        else:
+            return self._get_collection(res, payload=kwargs)
+
+    def get_fileInterface(self, name=None, rid=None, **kwargs):
+        """
+        Query the system for file interfaces (for CIFS/NFS)
+        :param name: Name of the interface to query (optional)
+        :param rid: Resource ID (internal ID) of the interface to query (optional)
+        :param kwargs: Additional accepted keyword arguments to modify the query:
+                        fields:  Comma separated list of fields to return
+                        filter:  Filter for the query
+                        groupby:  Group the results by a property
+                        compact:  If true, metadata is ignored (instance queries only)
+        :return: A query by name, id, or the entire collection will return
+                    the object's ID, if no other fields are specified.  If
+                    other fields are specified, and they are available via
+                    this resource, they will be returned as well
+        """
+        res = 'fileInterface'
         if name and rid:
             print('You cannot specify both a name and an ID.')
             return
