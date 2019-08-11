@@ -35,7 +35,7 @@ class Unity(object):
         specifies more properties.  This function would be more useful if
         all properties were returned for each resource.
 
-        @todo -> Come up with a way to return al properties of each object
+        @todo -> Come up with a way to return all properties of each object
                 explored with this function
         """
         if attr in self.__dict__:
