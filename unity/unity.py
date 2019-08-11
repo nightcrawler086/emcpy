@@ -44,7 +44,7 @@ class Unity(object):
             if self.session is None:
                 print('Not connected.')
             else:
-                return Unity.get_collection(self, attr)
+                return Unity._get_collection(self, attr)
 
     def connect(self):
         """
@@ -79,7 +79,7 @@ class Unity(object):
             session.headers.update(headers)
             session.auth = (self.user, self.password)
             login = session.get(login_uri, verify=False)
-            print(login.text)
+            # print(login.json())
             token = login.headers.get('EMC-CSRF-TOKEN')
             session.headers.update({'EMC-CSRF-TOKEN': token})
             self.session = session
@@ -96,7 +96,6 @@ class Unity(object):
             the connection are defined during the object creation and
             connect methods.
 
-        Todo:
         """
         if type(self.session) is requests.sessions.Session:
             logout_uri = 'https://%s/api/types/loginSessionInfo/action/logout' % self.name
@@ -107,22 +106,77 @@ class Unity(object):
             print('There is no active session to disconnect for this object')
             return
 
-    def get_collection(self,  resource, payload=None):
+    def _get_collection(self,  resource, payload=None):
+        """
+        Internal function for collection queries
+        @todo -> need to add a decorator to process HTTP responses
+        :param resource:
+        :param payload:
+        :return:
+        """
         payload = payload or {}
         endpoint = 'https://{}/{}/{}/{}'.format(self.name, 'api/types', resource, 'instances')
         response = self.session.get(endpoint, params=payload)
         return response.json()
 
-    def get_instance(self, resource, rid, payload=None):
+    def _get_instance(self, resource, rname=None, rid=None, payload=None):
         payload = payload or {'compact': 'true'}
-        endpoint = 'https://{}/{}/{}/{}'.format(self.name, 'api/instances', resource, rid)
+        if rid:
+            endpoint = 'https://{}/{}/{}/{}'.format(self.name, 'api/instances', resource, rid)
+        elif rname:
+            endpoint = 'https://{}/{}/{}/{}'.format(self.name, 'api/instances', resource, 'name:{}'.format(rname))
+        else:
+            return
+        print(endpoint)
         response = self.session.get(endpoint, params=payload)
+        print(response.url)
         return response.json()
 
-    def delete_instance(self, resource, rid, payload=None):
+    def _delete_instance(self, resource, rid, payload=None):
         payload = payload or {}
         endpoint = 'https://{}/{}/{}/{}'.format(self.name, 'api/instances', resource, rid)
         response = self.session.delete(endpoint, params=payload)
         return response.json()
 
-    def
+    """
+    Copied from github for reference
+    def cifsServer(self, item_filter=None, item_id=None, item_name=None):
+        return self.get_object('cifsServer', item_filter=item_filter,
+                               item_id=item_id, item_name=item_name)
+    """
+
+    # Configuring network communication
+    def get_cifsServer(self, name=None, rid=None, **kwargs):
+        """
+        Query the system for CIFS Servers
+        :param name: Name of the CIFS Server to query (optional)
+        :param rid: Resource ID (internal ID) of the CIFS server to query (optional)
+        :param kwargs: Additional accepted keyword arguments to modify the query:
+                        fields:  Comma separated list of fields to return
+                        filter:  Filter for the query
+                        groupby:  Group the results by a property
+                        compact:  If true, metadata is ignored (instance queries only)
+        :return:
+        """
+        res = 'cifsServer'
+        if name and rid:
+            print('You cannot specify both a name and an ID.')
+            return
+        elif name:
+            return self._get_instance(res, rname=name, payload=kwargs)
+        elif rid:
+            return self._get_instance(res, rid=rid, payload=kwargs)
+        else:
+            return self._get_collection(res, payload=kwargs)
+
+    ## Managing events and alerts
+    ## Managing jobs
+    ## Managing remote systems
+    ## Managing storage
+    ## Managing the environment
+    ## Managing the system
+    ## Monitoring capacity and performance
+    ## Protecting data
+    ## Quality Of Service
+    ## Servicing the system
+    ## User and security
