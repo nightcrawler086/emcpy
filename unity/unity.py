@@ -302,6 +302,73 @@ class Unity(object):
         else:
             return self._get_collection(res, payload=kwargs)
 
+    def get_fsnPort(self, name=None, rid=None, **kwargs):
+        """
+        Query the system for CIFS Servers
+        :param name: Name of the CIFS Server to query (optional)
+        :param rid: Resource ID (internal ID) of the CIFS server to query (optional)
+        :param kwargs: Additional accepted keyword arguments to modify the query:
+                        fields:  Comma separated list of fields to return
+                        filter:  Filter for the query
+                        groupby:  Group the results by a property
+                        compact:  If true, metadata is ignored (instance queries only)
+        :return: A query by name, id, or the entire collection will return
+                    the object's ID, if no other fields are specified.  If
+                    other fields are specified, and they are available via
+                    this resource, they will be returned as well
+        """
+        res = 'fsnPort'
+        if name and rid:
+            print('You cannot specify both a name and an ID.')
+            return
+        elif name:
+            return self._get_instance(res, rname=name, payload=kwargs)
+        elif rid:
+            return self._get_instance(res, rid=rid, payload=kwargs)
+        else:
+            return self._get_collection(res, payload=kwargs)
+
+    def get_ftpServer(self, rid=None, **kwargs):
+        """
+        Query the system for CIFS Servers
+        :param name: Name of the CIFS Server to query (optional)
+        :param rid: Resource ID (internal ID) of the CIFS server to query (optional)
+        :param kwargs: Additional accepted keyword arguments to modify the query:
+                        fields:  Comma separated list of fields to return
+                        filter:  Filter for the query
+                        groupby:  Group the results by a property
+                        compact:  If true, metadata is ignored (instance queries only)
+        :return: A query by name, id, or the entire collection will return
+                    the object's ID, if no other fields are specified.  If
+                    other fields are specified, and they are available via
+                    this resource, they will be returned as well
+        """
+        res = 'ftpServer'
+        if rid:
+            return self._get_instance(res, rname=name, payload=kwargs)
+        else:
+            return self._get_collection(res, payload=kwargs)
+
+    def get_ipInterface(self, rid=None, **kwargs):
+        """
+        Query the system for CIFS Servers
+        :param name: Name of the CIFS Server to query (optional)
+        :param rid: Resource ID (internal ID) of the CIFS server to query (optional)
+        :param kwargs: Additional accepted keyword arguments to modify the query:
+                        fields:  Comma separated list of fields to return
+                        filter:  Filter for the query
+                        groupby:  Group the results by a property
+                        compact:  If true, metadata is ignored (instance queries only)
+        :return: A query by name, id, or the entire collection will return
+                    the object's ID, if no other fields are specified.  If
+                    other fields are specified, and they are available via
+                    this resource, they will be returned as well
+        """
+        res = 'ipInterface'
+        if rid:
+            return self._get_instance(res, rname=name, payload=kwargs)
+        else:
+            return self._get_collection(res, payload=kwargs)
     ## Managing events and alerts
     ## Managing jobs
     ## Managing remote systems
