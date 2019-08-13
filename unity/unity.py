@@ -193,7 +193,6 @@ class Unity(object):
                     the object's ID, if no other fields are specified.  If
                     other fields are specified, and they are available via
                     this resource, they will be returned as well
-        @todo - Copy/pasted this function.  Need to test
         """
         res = 'cifsServer'
         if name and rid:
@@ -218,13 +217,9 @@ class Unity(object):
                     the object's ID, if no other fields are specified.  If
                     other fields are specified, and they are available via
                     this resource, they will be returned as well
-        @todo - Copy/pasted this function.  Need to test
         """
         res = 'dnsServer'
-        if name and rid:
-            print('You cannot specify both a name and an ID.')
-            return
-        elif rid:
+        if rid:
             return self._get_instance(res, rid=rid, payload=kwargs)
         else:
             return self._get_collection(res, payload=kwargs)
@@ -241,13 +236,9 @@ class Unity(object):
                     the object's ID, if no other fields are specified.  If
                     other fields are specified, and they are available via
                     this resource, they will be returned as well
-        @todo - Copy/pasted this function.  Need to test
         """
         res = 'fileDNSServer'
-        if name and rid:
-            print('You cannot specify both a name and an ID.')
-            return
-        elif rid:
+        if rid:
             return self._get_instance(res, rid=rid, payload=kwargs)
         else:
             return self._get_collection(res, payload=kwargs)
@@ -265,7 +256,6 @@ class Unity(object):
                     the object's ID, if no other fields are specified.  If
                     other fields are specified, and they are available via
                     this resource, they will be returned as well
-        @todo - Copy/pasted this function.  Need to test
         """
         res = 'fileInterface'
         if name and rid:
@@ -290,7 +280,6 @@ class Unity(object):
                     the object's ID, if no other fields are specified.  If
                     other fields are specified, and they are available via
                     this resource, they will be returned as well
-        @todo - Copy/pasted this function.  Need to test
         """
         res = 'fileKerberosServer'
         if rid:
@@ -310,7 +299,6 @@ class Unity(object):
                     the object's ID, if no other fields are specified.  If
                     other fields are specified, and they are available via
                     this resource, they will be returned as well
-        @todo - Copy/pasted this function.  Need to test
         """
         res = 'fileLDAPServer'
         if rid:
@@ -330,7 +318,6 @@ class Unity(object):
                     the object's ID, if no other fields are specified.  If
                     other fields are specified, and they are available via
                     this resource, they will be returned as well
-        @todo - Copy/pasted this function.  Need to test
         """
         res = 'fileNISServer'
         if rid:
@@ -351,7 +338,6 @@ class Unity(object):
                     the object's ID, if no other fields are specified.  If
                     other fields are specified, and they are available via
                     this resource, they will be returned as well
-        @todo - Copy/pasted this function.  Need to test
         """
         res = 'fsnPort'
         if name and rid:
@@ -376,7 +362,6 @@ class Unity(object):
                     the object's ID, if no other fields are specified.  If
                     other fields are specified, and they are available via
                     this resource, they will be returned as well
-        @todo - Copy/pasted this function.  Need to test
         """
         res = 'ftpServer'
         if rid:
@@ -396,7 +381,6 @@ class Unity(object):
                     the object's ID, if no other fields are specified.  If
                     other fields are specified, and they are available via
                     this resource, they will be returned as well
-        @todo - Copy/pasted this function.  Need to test
         """
         res = 'ipInterface'
         if rid:
@@ -417,7 +401,6 @@ class Unity(object):
                     the object's ID, if no other fields are specified.  If
                     other fields are specified, and they are available via
                     this resource, they will be returned as well
-        @todo - Copy/pasted this function.  Need to test
         """
         res = 'ipPort'
         if name and rid:
@@ -443,7 +426,6 @@ class Unity(object):
                     the object's ID, if no other fields are specified.  If
                     other fields are specified, and they are available via
                     this resource, they will be returned as well
-        @todo - Copy/pasted this function.  Need to test
         """
         res = 'iscsiNode'
         if name and rid:
@@ -468,7 +450,6 @@ class Unity(object):
                     the object's ID, if no other fields are specified.  If
                     other fields are specified, and they are available via
                     this resource, they will be returned as well
-        @todo - Copy/pasted this function.  Need to test
         """
         res = 'iscsiPortal'
         if rid:
@@ -488,7 +469,6 @@ class Unity(object):
                     the object's ID, if no other fields are specified.  If
                     other fields are specified, and they are available via
                     this resource, they will be returned as well
-        @todo - Copy/pasted this function.  Need to test
         """
         res = 'iscsiSettings'
         if rid:
@@ -509,7 +489,6 @@ class Unity(object):
                     the object's ID, if no other fields are specified.  If
                     other fields are specified, and they are available via
                     this resource, they will be returned as well
-        @todo - Copy/pasted this function.  Need to test
         """
         res = 'linkAggregation'
         if name and rid:
@@ -534,7 +513,6 @@ class Unity(object):
                     the object's ID, if no other fields are specified.  If
                     other fields are specified, and they are available via
                     this resource, they will be returned as well
-        @todo - Copy/pasted this function.  Need to test
         """
         res = 'mgmtInterface'
         if rid:
@@ -554,7 +532,6 @@ class Unity(object):
                     the object's ID, if no other fields are specified.  If
                     other fields are specified, and they are available via
                     this resource, they will be returned as well
-        @todo - Copy/pasted this function.  Need to test
         """
         res = 'mgmtInterfaceSettings'
         if rid:
@@ -575,7 +552,6 @@ class Unity(object):
                     the object's ID, if no other fields are specified.  If
                     other fields are specified, and they are available via
                     this resource, they will be returned as well
-        @todo - Copy/pasted this function.  Need to test
         """
         res = 'nasServer'
         if name and rid:
@@ -590,7 +566,6 @@ class Unity(object):
 
     def new_nasServer(self, name, homeSP, pool, **kwargs):
         """
-
         :param name: Name of the NAS Server to create
         :param homeSP: ID of the SP (spa, spb) to create the NAS Server on
         :param pool: ID of the storage pool to create the NAS Server in
@@ -614,7 +589,6 @@ class Unity(object):
                     the object's ID, if no other fields are specified.  If
                     other fields are specified, and they are available via
                     this resource, they will be returned as well
-        @todo - Copy/pasted this function.  Need to test
         """
         res = 'nfsServer'
         if rid:
@@ -634,7 +608,6 @@ class Unity(object):
                     the object's ID, if no other fields are specified.  If
                     other fields are specified, and they are available via
                     this resource, they will be returned as well
-        @todo - Copy/pasted this function.  Need to test
         """
         res = 'preferredInterfaceSettings'
         if rid:
@@ -654,7 +627,6 @@ class Unity(object):
                     the object's ID, if no other fields are specified.  If
                     other fields are specified, and they are available via
                     this resource, they will be returned as well
-        @todo - Copy/pasted this function.  Need to test
         """
         res = 'route'
         if rid:
@@ -674,7 +646,6 @@ class Unity(object):
                     the object's ID, if no other fields are specified.  If
                     other fields are specified, and they are available via
                     this resource, they will be returned as well
-        @todo - Copy/pasted this function.  Need to test
         """
         res = 'smtpServer'
         if rid:
@@ -695,7 +666,6 @@ class Unity(object):
                     the object's ID, if no other fields are specified.  If
                     other fields are specified, and they are available via
                     this resource, they will be returned as well
-        @todo - Copy/pasted this function.  Need to test
         """
         res = 'tenant'
         if name and rid:
@@ -720,7 +690,6 @@ class Unity(object):
                     the object's ID, if no other fields are specified.  If
                     other fields are specified, and they are available via
                     this resource, they will be returned as well
-        @todo - Copy/pasted this function.  Need to test
         """
         res = 'urServer'
         if rid:
@@ -740,7 +709,6 @@ class Unity(object):
                     the object's ID, if no other fields are specified.  If
                     other fields are specified, and they are available via
                     this resource, they will be returned as well
-        @todo - Copy/pasted this function.  Need to test
         """
         res = 'virusChecker'
         if rid:
@@ -760,7 +728,6 @@ class Unity(object):
                     the object's ID, if no other fields are specified.  If
                     other fields are specified, and they are available via
                     this resource, they will be returned as well
-        @todo - Copy/pasted this function.  Need to test
         """
         res = 'vlanInfo'
         if rid:
@@ -780,7 +747,6 @@ class Unity(object):
                     the object's ID, if no other fields are specified.  If
                     other fields are specified, and they are available via
                     this resource, they will be returned as well
-        @todo - Copy/pasted this function.  Need to test
         """
         res = 'vmwareNasPEServer'
         if rid:
@@ -789,9 +755,604 @@ class Unity(object):
             return self._get_collection(res, payload=kwargs)
 
     ## Managing events and alerts
+
+    def get_alert(self, rid=None, **kwargs):
+        """
+        :param rid: Resource ID (internal ID) of the resource to query (optional)
+        :param kwargs: Additional accepted keyword arguments to modify the query:
+                        fields:  Comma separated list of fields to return
+                        filter:  Filter for the query
+                        groupby:  Group the results by a property
+                        compact:  If true, metadata is ignored (instance queries only)
+        :return: A query by name, id, or the entire collection will return
+                    the object's ID, if no other fields are specified.  If
+                    other fields are specified, and they are available via
+                    this resource, they will be returned as well
+        """
+        res = 'alert'
+        if rid:
+            return self._get_instance(res, rid=rid, payload=kwargs)
+        else:
+            return self._get_collection(res, payload=kwargs)
+
+    def get_alertConfig(self, rid=None, **kwargs):
+        """
+        :param rid: Resource ID (internal ID) of the resource to query (optional)
+        :param kwargs: Additional accepted keyword arguments to modify the query:
+                        fields:  Comma separated list of fields to return
+                        filter:  Filter for the query
+                        groupby:  Group the results by a property
+                        compact:  If true, metadata is ignored (instance queries only)
+        :return: A query by name, id, or the entire collection will return
+                    the object's ID, if no other fields are specified.  If
+                    other fields are specified, and they are available via
+                    this resource, they will be returned as well
+        """
+        res = 'alertConfig'
+        if rid:
+            return self._get_instance(res, rid=rid, payload=kwargs)
+        else:
+            return self._get_collection(res, payload=kwargs)
+
+    def get_alertConfigSNMPTarget(self, rid=None, **kwargs):
+        """
+        :param rid: Resource ID (internal ID) of the resource to query (optional)
+        :param kwargs: Additional accepted keyword arguments to modify the query:
+                        fields:  Comma separated list of fields to return
+                        filter:  Filter for the query
+                        groupby:  Group the results by a property
+                        compact:  If true, metadata is ignored (instance queries only)
+        :return: A query by name, id, or the entire collection will return
+                    the object's ID, if no other fields are specified.  If
+                    other fields are specified, and they are available via
+                    this resource, they will be returned as well
+        """
+        res = 'alertConfigSNMPTarget'
+        if rid:
+            return self._get_instance(res, rid=rid, payload=kwargs)
+        else:
+            return self._get_collection(res, payload=kwargs)
+
+    def get_alertEmailConfig(self, rid=None, **kwargs):
+        """
+        :param rid: Resource ID (internal ID) of the resource to query (optional)
+        :param kwargs: Additional accepted keyword arguments to modify the query:
+                        fields:  Comma separated list of fields to return
+                        filter:  Filter for the query
+                        groupby:  Group the results by a property
+                        compact:  If true, metadata is ignored (instance queries only)
+        :return: A query by name, id, or the entire collection will return
+                    the object's ID, if no other fields are specified.  If
+                    other fields are specified, and they are available via
+                    this resource, they will be returned as well
+        """
+        res = 'alertEmailConfig'
+        if rid:
+            return self._get_instance(res, rid=rid, payload=kwargs)
+        else:
+            return self._get_collection(res, payload=kwargs)
+
+    def get_event(self, rid=None, **kwargs):
+        """
+        :param rid: Resource ID (internal ID) of the resource to query (optional)
+        :param kwargs: Additional accepted keyword arguments to modify the query:
+                        fields:  Comma separated list of fields to return
+                        filter:  Filter for the query
+                        groupby:  Group the results by a property
+                        compact:  If true, metadata is ignored (instance queries only)
+        :return: A query by name, id, or the entire collection will return
+                    the object's ID, if no other fields are specified.  If
+                    other fields are specified, and they are available via
+                    this resource, they will be returned as well
+        """
+        res = 'event'
+        if rid:
+            return self._get_instance(res, rid=rid, payload=kwargs)
+        else:
+            return self._get_collection(res, payload=kwargs)
+
     ## Managing jobs
+
+    def get_job(self, rid=None, **kwargs):
+        """
+        :param rid: Resource ID (internal ID) of the resource to query (optional)
+        :param kwargs: Additional accepted keyword arguments to modify the query:
+                        fields:  Comma separated list of fields to return
+                        filter:  Filter for the query
+                        groupby:  Group the results by a property
+                        compact:  If true, metadata is ignored (instance queries only)
+        :return: A query by name, id, or the entire collection will return
+                    the object's ID, if no other fields are specified.  If
+                    other fields are specified, and they are available via
+                    this resource, they will be returned as well
+        """
+        res = 'job'
+        if rid:
+            return self._get_instance(res, rid=rid, payload=kwargs)
+        else:
+            return self._get_collection(res, payload=kwargs)
+
     ## Managing remote systems
+
+    def get_cifsShare(self, name=None, rid=None, **kwargs):
+        """
+        :param name: Name of the resource to query (optional)
+        :param rid: Resource ID (internal ID) of the resource to query (optional)
+        :param kwargs: Additional accepted keyword arguments to modify the query:
+                        fields:  Comma separated list of fields to return
+                        filter:  Filter for the query
+                        groupby:  Group the results by a property
+                        compact:  If true, metadata is ignored (instance queries only)
+        :return: A query by name, id, or the entire collection will return
+                    the object's ID, if no other fields are specified.  If
+                    other fields are specified, and they are available via
+                    this resource, they will be returned as well
+        """
+        res = 'cifsShare'
+        if name and rid:
+            print('You cannot specify both a name and an ID.')
+            return
+        elif name:
+            return self._get_instance(res, rname=name, payload=kwargs)
+        elif rid:
+            return self._get_instance(res, rid=rid, payload=kwargs)
+        else:
+            return self._get_collection(res, payload=kwargs)
+
+    def get_datastore(self, rid=None, **kwargs):
+        """
+        :param rid: Resource ID (internal ID) of the resource to query (optional)
+        :param kwargs: Additional accepted keyword arguments to modify the query:
+                        fields:  Comma separated list of fields to return
+                        filter:  Filter for the query
+                        groupby:  Group the results by a property
+                        compact:  If true, metadata is ignored (instance queries only)
+        :return: A query by name, id, or the entire collection will return
+                    the object's ID, if no other fields are specified.  If
+                    other fields are specified, and they are available via
+                    this resource, they will be returned as well
+        """
+        res = 'datastore'
+        if rid:
+            return self._get_instance(res, rid=rid, payload=kwargs)
+        else:
+            return self._get_collection(res, payload=kwargs)
+
+    def get_host(self, name=None, rid=None, **kwargs):
+        """
+        :param name: Name of the resource to query (optional)
+        :param rid: Resource ID (internal ID) of the resource to query (optional)
+        :param kwargs: Additional accepted keyword arguments to modify the query:
+                        fields:  Comma separated list of fields to return
+                        filter:  Filter for the query
+                        groupby:  Group the results by a property
+                        compact:  If true, metadata is ignored (instance queries only)
+        :return: A query by name, id, or the entire collection will return
+                    the object's ID, if no other fields are specified.  If
+                    other fields are specified, and they are available via
+                    this resource, they will be returned as well
+        """
+        res = 'host'
+        if name and rid:
+            print('You cannot specify both a name and an ID.')
+            return
+        elif name:
+            return self._get_instance(res, rname=name, payload=kwargs)
+        elif rid:
+            return self._get_instance(res, rid=rid, payload=kwargs)
+        else:
+            return self._get_collection(res, payload=kwargs)
+
+    def get_hostContainer(self, name=None, rid=None, **kwargs):
+        """
+        :param name: Name of the resource to query (optional)
+        :param rid: Resource ID (internal ID) of the resource to query (optional)
+        :param kwargs: Additional accepted keyword arguments to modify the query:
+                        fields:  Comma separated list of fields to return
+                        filter:  Filter for the query
+                        groupby:  Group the results by a property
+                        compact:  If true, metadata is ignored (instance queries only)
+        :return: A query by name, id, or the entire collection will return
+                    the object's ID, if no other fields are specified.  If
+                    other fields are specified, and they are available via
+                    this resource, they will be returned as well
+        """
+        res = 'hostContainer'
+        if name and rid:
+            print('You cannot specify both a name and an ID.')
+            return
+        elif name:
+            return self._get_instance(res, rname=name, payload=kwargs)
+        elif rid:
+            return self._get_instance(res, rid=rid, payload=kwargs)
+        else:
+            return self._get_collection(res, payload=kwargs)
+
+    def get_hostIPPort(self, name=None, rid=None, **kwargs):
+        """
+        :param name: Name of the resource to query (optional)
+        :param rid: Resource ID (internal ID) of the resource to query (optional)
+        :param kwargs: Additional accepted keyword arguments to modify the query:
+                        fields:  Comma separated list of fields to return
+                        filter:  Filter for the query
+                        groupby:  Group the results by a property
+                        compact:  If true, metadata is ignored (instance queries only)
+        :return: A query by name, id, or the entire collection will return
+                    the object's ID, if no other fields are specified.  If
+                    other fields are specified, and they are available via
+                    this resource, they will be returned as well
+        """
+        res = 'hostIPPort'
+        if name and rid:
+            print('You cannot specify both a name and an ID.')
+            return
+        elif name:
+            return self._get_instance(res, rname=name, payload=kwargs)
+        elif rid:
+            return self._get_instance(res, rid=rid, payload=kwargs)
+        else:
+            return self._get_collection(res, payload=kwargs)
+
+    def get_hostInitiator(self, name=None, rid=None, **kwargs):
+        """
+        :param name: Name of the resource to query (optional)
+        :param rid: Resource ID (internal ID) of the resource to query (optional)
+        :param kwargs: Additional accepted keyword arguments to modify the query:
+                        fields:  Comma separated list of fields to return
+                        filter:  Filter for the query
+                        groupby:  Group the results by a property
+                        compact:  If true, metadata is ignored (instance queries only)
+        :return: A query by name, id, or the entire collection will return
+                    the object's ID, if no other fields are specified.  If
+                    other fields are specified, and they are available via
+                    this resource, they will be returned as well
+        """
+        res = 'hostInitiator'
+        if name and rid:
+            print('You cannot specify both a name and an ID.')
+            return
+        elif name:
+            return self._get_instance(res, rname=name, payload=kwargs)
+        elif rid:
+            return self._get_instance(res, rid=rid, payload=kwargs)
+        else:
+            return self._get_collection(res, payload=kwargs)
+
+    def get_hostInitiatorPath(self, rid=None, **kwargs):
+        """
+        :param rid: Resource ID (internal ID) of the resource to query (optional)
+        :param kwargs: Additional accepted keyword arguments to modify the query:
+                        fields:  Comma separated list of fields to return
+                        filter:  Filter for the query
+                        groupby:  Group the results by a property
+                        compact:  If true, metadata is ignored (instance queries only)
+        :return: A query by name, id, or the entire collection will return
+                    the object's ID, if no other fields are specified.  If
+                    other fields are specified, and they are available via
+                    this resource, they will be returned as well
+        """
+        res = 'hostInitiatorPath'
+        if rid:
+            return self._get_instance(res, rid=rid, payload=kwargs)
+        else:
+            return self._get_collection(res, payload=kwargs)
+
+    def get_hostLun(self, rid=None, **kwargs):
+        """
+        :param rid: Resource ID (internal ID) of the resource to query (optional)
+        :param kwargs: Additional accepted keyword arguments to modify the query:
+                        fields:  Comma separated list of fields to return
+                        filter:  Filter for the query
+                        groupby:  Group the results by a property
+                        compact:  If true, metadata is ignored (instance queries only)
+        :return: A query by name, id, or the entire collection will return
+                    the object's ID, if no other fields are specified.  If
+                    other fields are specified, and they are available via
+                    this resource, they will be returned as well
+        """
+        res = 'hostLun'
+        if rid:
+            return self._get_instance(res, rid=rid, payload=kwargs)
+        else:
+            return self._get_collection(res, payload=kwargs)
+
+    def get_hostVVolDatastore(self, rid=None, **kwargs):
+        """
+        :param rid: Resource ID (internal ID) of the resource to query (optional)
+        :param kwargs: Additional accepted keyword arguments to modify the query:
+                        fields:  Comma separated list of fields to return
+                        filter:  Filter for the query
+                        groupby:  Group the results by a property
+                        compact:  If true, metadata is ignored (instance queries only)
+        :return: A query by name, id, or the entire collection will return
+                    the object's ID, if no other fields are specified.  If
+                    other fields are specified, and they are available via
+                    this resource, they will be returned as well
+        """
+        res = 'hostVVolDatastore'
+        if rid:
+            return self._get_instance(res, rid=rid, payload=kwargs)
+        else:
+            return self._get_collection(res, payload=kwargs)
+
+    def get_nfsShare(self, name=None, rid=None, **kwargs):
+        """
+        :param name: Name of the resource to query (optional)
+        :param rid: Resource ID (internal ID) of the resource to query (optional)
+        :param kwargs: Additional accepted keyword arguments to modify the query:
+                        fields:  Comma separated list of fields to return
+                        filter:  Filter for the query
+                        groupby:  Group the results by a property
+                        compact:  If true, metadata is ignored (instance queries only)
+        :return: A query by name, id, or the entire collection will return
+                    the object's ID, if no other fields are specified.  If
+                    other fields are specified, and they are available via
+                    this resource, they will be returned as well
+        """
+        res = 'nfsShare'
+        if name and rid:
+            print('You cannot specify both a name and an ID.')
+            return
+        elif name:
+            return self._get_instance(res, rname=name, payload=kwargs)
+        elif rid:
+            return self._get_instance(res, rid=rid, payload=kwargs)
+        else:
+            return self._get_collection(res, payload=kwargs)
+
+    def get_remoteSystem(self, name=None, rid=None, **kwargs):
+        """
+        :param name: Name of the resource to query (optional)
+        :param rid: Resource ID (internal ID) of the resource to query (optional)
+        :param kwargs: Additional accepted keyword arguments to modify the query:
+                        fields:  Comma separated list of fields to return
+                        filter:  Filter for the query
+                        groupby:  Group the results by a property
+                        compact:  If true, metadata is ignored (instance queries only)
+        :return: A query by name, id, or the entire collection will return
+                    the object's ID, if no other fields are specified.  If
+                    other fields are specified, and they are available via
+                    this resource, they will be returned as well
+        """
+        res = 'remoteSystem'
+        if name and rid:
+            print('You cannot specify both a name and an ID.')
+            return
+        elif name:
+            return self._get_instance(res, rname=name, payload=kwargs)
+        elif rid:
+            return self._get_instance(res, rid=rid, payload=kwargs)
+        else:
+            return self._get_collection(res, payload=kwargs)
+
+    def get_rpChapSettings(self, rid=None, **kwargs):
+        """
+        :param rid: Resource ID (internal ID) of the resource to query (optional)
+        :param kwargs: Additional accepted keyword arguments to modify the query:
+                        fields:  Comma separated list of fields to return
+                        filter:  Filter for the query
+                        groupby:  Group the results by a property
+                        compact:  If true, metadata is ignored (instance queries only)
+        :return: A query by name, id, or the entire collection will return
+                    the object's ID, if no other fields are specified.  If
+                    other fields are specified, and they are available via
+                    this resource, they will be returned as well
+        """
+        res = 'rpChapSettings'
+        if rid:
+            return self._get_instance(res, rid=rid, payload=kwargs)
+        else:
+            return self._get_collection(res, payload=kwargs)
+
+    def get_vm(self, name=None, rid=None, **kwargs):
+        """
+        :param name: Name of the resource to query (optional)
+        :param rid: Resource ID (internal ID) of the resource to query (optional)
+        :param kwargs: Additional accepted keyword arguments to modify the query:
+                        fields:  Comma separated list of fields to return
+                        filter:  Filter for the query
+                        groupby:  Group the results by a property
+                        compact:  If true, metadata is ignored (instance queries only)
+        :return: A query by name, id, or the entire collection will return
+                    the object's ID, if no other fields are specified.  If
+                    other fields are specified, and they are available via
+                    this resource, they will be returned as well
+        """
+        res = 'vm'
+        if name and rid:
+            print('You cannot specify both a name and an ID.')
+            return
+        elif name:
+            return self._get_instance(res, rname=name, payload=kwargs)
+        elif rid:
+            return self._get_instance(res, rid=rid, payload=kwargs)
+        else:
+            return self._get_collection(res, payload=kwargs)
+
+    def get_vmDisk(self, name=None, rid=None, **kwargs):
+        """
+        :param name: Name of the resource to query (optional)
+        :param rid: Resource ID (internal ID) of the resource to query (optional)
+        :param kwargs: Additional accepted keyword arguments to modify the query:
+                        fields:  Comma separated list of fields to return
+                        filter:  Filter for the query
+                        groupby:  Group the results by a property
+                        compact:  If true, metadata is ignored (instance queries only)
+        :return: A query by name, id, or the entire collection will return
+                    the object's ID, if no other fields are specified.  If
+                    other fields are specified, and they are available via
+                    this resource, they will be returned as well
+        """
+        res = 'vmDisk'
+        if name and rid:
+            print('You cannot specify both a name and an ID.')
+            return
+        elif name:
+            return self._get_instance(res, rname=name, payload=kwargs)
+        elif rid:
+            return self._get_instance(res, rid=rid, payload=kwargs)
+        else:
+            return self._get_collection(res, payload=kwargs)
+
+    def get_vmwarePE(self, name=None, rid=None, **kwargs):
+        """
+        :param name: Name of the resource to query (optional)
+        :param rid: Resource ID (internal ID) of the resource to query (optional)
+        :param kwargs: Additional accepted keyword arguments to modify the query:
+                        fields:  Comma separated list of fields to return
+                        filter:  Filter for the query
+                        groupby:  Group the results by a property
+                        compact:  If true, metadata is ignored (instance queries only)
+        :return: A query by name, id, or the entire collection will return
+                    the object's ID, if no other fields are specified.  If
+                    other fields are specified, and they are available via
+                    this resource, they will be returned as well
+        """
+        res = 'vmwarePE'
+        if name and rid:
+            print('You cannot specify both a name and an ID.')
+            return
+        elif name:
+            return self._get_instance(res, rname=name, payload=kwargs)
+        elif rid:
+            return self._get_instance(res, rid=rid, payload=kwargs)
+        else:
+            return self._get_collection(res, payload=kwargs)
+
     ## Managing storage
+
+    def get_aclUser(self, name=None, rid=None, **kwargs):
+        """
+        :param name: Name of the resource to query (optional)
+        :param rid: Resource ID (internal ID) of the resource to query (optional)
+        :param kwargs: Additional accepted keyword arguments to modify the query:
+                        fields:  Comma separated list of fields to return
+                        filter:  Filter for the query
+                        groupby:  Group the results by a property
+                        compact:  If true, metadata is ignored (instance queries only)
+        :return: A query by name, id, or the entire collection will return
+                    the object's ID, if no other fields are specified.  If
+                    other fields are specified, and they are available via
+                    this resource, they will be returned as well
+        """
+        res = 'aclUser'
+        if name and rid:
+            print('You cannot specify both a name and an ID.')
+            return
+        elif name:
+            return self._get_instance(res, rname=name, payload=kwargs)
+        elif rid:
+            return self._get_instance(res, rid=rid, payload=kwargs)
+        else:
+            return self._get_collection(res, payload=kwargs)
+
+    def get_capabilityProfile(self, name=None, rid=None, **kwargs):
+        """
+        :param name: Name of the resource to query (optional)
+        :param rid: Resource ID (internal ID) of the resource to query (optional)
+        :param kwargs: Additional accepted keyword arguments to modify the query:
+                        fields:  Comma separated list of fields to return
+                        filter:  Filter for the query
+                        groupby:  Group the results by a property
+                        compact:  If true, metadata is ignored (instance queries only)
+        :return: A query by name, id, or the entire collection will return
+                    the object's ID, if no other fields are specified.  If
+                    other fields are specified, and they are available via
+                    this resource, they will be returned as well
+        """
+        res = 'capabilityProfile'
+        if name and rid:
+            print('You cannot specify both a name and an ID.')
+            return
+        elif name:
+            return self._get_instance(res, rname=name, payload=kwargs)
+        elif rid:
+            return self._get_instance(res, rid=rid, payload=kwargs)
+        else:
+            return self._get_collection(res, payload=kwargs)
+
+    def get_dhsmConnection(self, rid=None, **kwargs):
+        """
+        :param rid: Resource ID (internal ID) of the resource to query (optional)
+        :param kwargs: Additional accepted keyword arguments to modify the query:
+                        fields:  Comma separated list of fields to return
+                        filter:  Filter for the query
+                        groupby:  Group the results by a property
+                        compact:  If true, metadata is ignored (instance queries only)
+        :return: A query by name, id, or the entire collection will return
+                    the object's ID, if no other fields are specified.  If
+                    other fields are specified, and they are available via
+                    this resource, they will be returned as well
+        """
+        res = 'dhsmConnection'
+        if rid:
+            return self._get_instance(res, rid=rid, payload=kwargs)
+        else:
+            return self._get_collection(res, payload=kwargs)
+
+    def get_dhsmServer(self, rid=None, **kwargs):
+        """
+        :param rid: Resource ID (internal ID) of the resource to query (optional)
+        :param kwargs: Additional accepted keyword arguments to modify the query:
+                        fields:  Comma separated list of fields to return
+                        filter:  Filter for the query
+                        groupby:  Group the results by a property
+                        compact:  If true, metadata is ignored (instance queries only)
+        :return: A query by name, id, or the entire collection will return
+                    the object's ID, if no other fields are specified.  If
+                    other fields are specified, and they are available via
+                    this resource, they will be returned as well
+        """
+        res = 'dhsmServer'
+        if rid:
+            return self._get_instance(res, rid=rid, payload=kwargs)
+        else:
+            return self._get_collection(res, payload=kwargs)
+
+    def get_fastCache(self, name=None, rid=None, **kwargs):
+        """
+        :param name: Name of the resource to query (optional)
+        :param rid: Resource ID (internal ID) of the resource to query (optional)
+        :param kwargs: Additional accepted keyword arguments to modify the query:
+                        fields:  Comma separated list of fields to return
+                        filter:  Filter for the query
+                        groupby:  Group the results by a property
+                        compact:  If true, metadata is ignored (instance queries only)
+        :return: A query by name, id, or the entire collection will return
+                    the object's ID, if no other fields are specified.  If
+                    other fields are specified, and they are available via
+                    this resource, they will be returned as well
+        """
+        res = 'fastCache'
+        if name and rid:
+            print('You cannot specify both a name and an ID.')
+            return
+        elif name:
+            return self._get_instance(res, rname=name, payload=kwargs)
+        elif rid:
+            return self._get_instance(res, rid=rid, payload=kwargs)
+        else:
+            return self._get_collection(res, payload=kwargs)
+
+    def get_fastVP(self, rid=None, **kwargs):
+        """
+        :param rid: Resource ID (internal ID) of the resource to query (optional)
+        :param kwargs: Additional accepted keyword arguments to modify the query:
+                        fields:  Comma separated list of fields to return
+                        filter:  Filter for the query
+                        groupby:  Group the results by a property
+                        compact:  If true, metadata is ignored (instance queries only)
+        :return: A query by name, id, or the entire collection will return
+                    the object's ID, if no other fields are specified.  If
+                    other fields are specified, and they are available via
+                    this resource, they will be returned as well
+        """
+        res = 'fastVP'
+        if rid:
+            return self._get_instance(res, rid=rid, payload=kwargs)
+        else:
+            return self._get_collection(res, payload=kwargs)
+
     ## Managing the environment
     ## Managing the system
     ## Monitoring capacity and performance
