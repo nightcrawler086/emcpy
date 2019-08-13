@@ -1,3 +1,4 @@
+import json
 import requests
 
 
@@ -131,7 +132,6 @@ class Unity(object):
             endpoint = 'https://{}/{}/{}/{}'.format(self.name, 'api/instances', resource, 'name:{}'.format(rname))
         else:
             return
-        print(endpoint)
         response = self.session.get(endpoint, params=payload)
         print(response.url)
         return response.json()
@@ -141,6 +141,15 @@ class Unity(object):
         endpoint = 'https://{}/{}/{}/{}'.format(self.name, 'api/instances', resource, rid)
         response = self.session.delete(endpoint, params=payload)
         return response.json()
+
+    def _create_instance(self, resource, data=None):
+        if not data:
+            return
+        else:
+            body = json.dumps(data)
+            endpoint = 'https://{}/{}/{}/{}'.format(self.name, 'api/types', resource, 'instances')
+            response = self.session.post(endpoint, data=body)
+            return response.json()
 
     def get_resource(self, resource, name=None, rid=None, **kwargs):
         """
@@ -564,7 +573,7 @@ class Unity(object):
         else:
             return self._get_collection(res, payload=kwargs)
 
-    def new_nasServer(self, name, homeSP, pool, **kwargs):
+    def new_nasServer(self, **kwargs):
         """
         :param name: Name of the NAS Server to create
         :param homeSP: ID of the SP (spa, spb) to create the NAS Server on
@@ -574,8 +583,8 @@ class Unity(object):
                         additional properties accepted.
         :return: ID of the NAS Server that is created
         """
-        # Need to build the JSON object
-        # Use that to POST to the right URL
+        res = 'nasServer'
+        return self._create_instance(res, kwargs)
 
     def get_nfsServer(self, rid=None, **kwargs):
         """
