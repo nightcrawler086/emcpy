@@ -573,7 +573,7 @@ class Unity(object):
         else:
             return self._get_collection(res, payload=kwargs)
 
-    def new_nasServer(self, **kwargs):
+    def new_nasServer(self, name, homeSP, poolId, **kwargs):
         """
         :param name: Name of the NAS Server to create
         :param homeSP: ID of the SP (spa, spb) to create the NAS Server on
@@ -582,9 +582,14 @@ class Unity(object):
                         Review the API documentation for information on the
                         additional properties accepted.
         :return: ID of the NAS Server that is created
+        @todo - Data isn't quite right yet.  API is not recognizing it as valid
         """
         res = 'nasServer'
-        return self._create_instance(res, kwargs)
+        data = {"name": name, "homeSP": homeSP, "pool": {"id": poolId}}
+        if kwargs:
+            data.update(kwargs)
+        data = json.dumps(data)
+        return self._create_instance(res, data)
 
     def get_nfsServer(self, rid=None, **kwargs):
         """
