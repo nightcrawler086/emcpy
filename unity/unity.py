@@ -6,6 +6,21 @@ class Unity(object):
     """
     Initializes the object.
 
+    Design:
+
+    All methods defined in this class will follow a specific pattern:
+
+    _function_name - This is an internal function, not meant to be used directly
+
+
+    Function Arguments:
+
+    All required arguments for the function will be positional (and therefore
+    required).  All optional arguments will be named (**kwargs).  The only exception
+    is optional arguments that require a dictionary:
+
+        myArgument={'id': 'myId'}
+
     @todo Need to add some unittests for all the methods
     """
     def __init__(self, name, user, password):
@@ -58,10 +73,6 @@ class Unity(object):
         Examples:
             > unity.connect()
 
-        Todo:
-            - Should we return the results of the GET that we use to login
-                (the system collection)?
-            - We need to add some code to process the HTTP response
 
         :returns
             If the connection is successful, it will set the 'session' property
@@ -166,7 +177,7 @@ class Unity(object):
         :param resource:  Type of the resource to query
         :param name: Name of the resource to query (optional)
         :param rid: Internal ID (rid = Resource ID) to query (optional)
-        :param kwargs: Additional accepted keyword arguments to modify the query:
+        :param kwargs: Additional keyword arguments to modify the query:
                         fields:  Comma separated list of fields to return
                         filter:  Filter for the query
                         groupby:  Group the results by a property
@@ -572,15 +583,27 @@ class Unity(object):
         else:
             return self._get_collection(res, payload=kwargs)
 
-    def new_nasServer(self, name, homeSP, poolId, **kwargs):
+    def new_nasServer(self, name, homeSP, poolId, tenantId=None, **kwargs):
         """
         :param name: Name of the NAS Server to create
         :param homeSP: ID of the SP (spa, spb) to create the NAS Server on
         :param poolId: ID of the storage pool to create the NAS Server in
+        :param tenantId:  ID of the tenant to create the NAS Server in.  This
+                        argument is optional, but requires a dictionary.
+
+                        This enables you to specify the tenant ID like this:
+
+                        u.new_nasServer(name, homeSP, poolId, tenantId=<id>)
+
+                        Instead of this:
+
+                        u.new_nasServer(name, homeSP, poolId, tenant={'id': <id>})
         :param kwargs: All additional parameters are named, and optional.
                         Review the API documentation for information on the
                         additional properties accepted.
-        :return: ID of the NAS Server that is created
+        :return: ID of the NAS Server that is created:
+
+                    content': {u'id': u'nas_3'}
         """
         res = 'nasServer'
         data = {
@@ -592,6 +615,13 @@ class Unity(object):
                 'id': poolId
             }
         }
+        if tenantId is not None:
+            tenant = {
+                'tenant': {
+                    'id': tenantId
+                }
+            }
+            data.update(tenant)
         if kwargs:
             data.update(kwargs)
         return self._create_instance(res, payload=data)
