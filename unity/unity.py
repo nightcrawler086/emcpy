@@ -79,7 +79,6 @@ class Unity(object):
             }
             requests.packages.urllib3.disable_warnings()
             login_uri = 'https://{}/{}/{}'.format(self.name, 'api/types', 'system/instances')
-            print(login_uri)
             session = requests.Session()
             session.headers.update(headers)
             session.auth = (self.user, self.password)
@@ -142,11 +141,11 @@ class Unity(object):
         response = self.session.delete(endpoint, params=payload)
         return response.json()
 
-    def _create_instance(self, resource, data=None):
-        if not data:
+    def _create_instance(self, resource, payload=None):
+        if not payload:
             return
         else:
-            body = json.dumps(data)
+            body = json.dumps(payload)
             endpoint = 'https://{}/{}/{}/{}'.format(self.name, 'api/types', resource, 'instances')
             response = self.session.post(endpoint, data=body)
             return response.json()
@@ -577,19 +576,25 @@ class Unity(object):
         """
         :param name: Name of the NAS Server to create
         :param homeSP: ID of the SP (spa, spb) to create the NAS Server on
-        :param pool: ID of the storage pool to create the NAS Server in
+        :param poolId: ID of the storage pool to create the NAS Server in
         :param kwargs: All additional parameters are named, and optional.
                         Review the API documentation for information on the
                         additional properties accepted.
         :return: ID of the NAS Server that is created
-        @todo - Data isn't quite right yet.  API is not recognizing it as valid
         """
         res = 'nasServer'
-        data = {"name": name, "homeSP": homeSP, "pool": {"id": poolId}}
+        data = {
+            'name': name,
+            'homeSP': {
+                'id': homeSP
+            },
+            'pool': {
+                'id': poolId
+            }
+        }
         if kwargs:
             data.update(kwargs)
-        data = json.dumps(data)
-        return self._create_instance(res, data)
+        return self._create_instance(res, payload=data)
 
     def get_nfsServer(self, rid=None, **kwargs):
         """
