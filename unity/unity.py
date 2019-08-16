@@ -161,6 +161,15 @@ class Unity(object):
             response = self.session.post(endpoint, data=body)
             return response.json()
 
+    def _instance_action(self, resource, action, payload=None):
+        if not payload:
+            return
+        else:
+            body = json.dumps(payload)
+            endpoint = 'https://{}/{}/{}/{}/{}'.format(self.name, 'api/types', resource, 'action', action)
+            response = self.session.post(endpoint, data=body)
+            return response.json()
+
     def get_resource(self, resource, name=None, rid=None, **kwargs):
         """
         One query function to rule them all.
@@ -1470,6 +1479,66 @@ class Unity(object):
             return self._get_instance(res, rid=rid, payload=kwargs)
         else:
             return self._get_collection(res, payload=kwargs)
+
+    def new_filesystem(self, name, nasServer, size, poolId, supportedProtocols,
+                       isThinEnabled='true', isDataReductionEnabled='true',
+                       isAdvancedDedupEnabled='true', infoThreshold=0,
+                       warningThreshold=75, errorThreshold=95, **kwargs):
+        """
+        :param name: Name of the filesystem to create
+        :param nasServer: Name of the NAS Server to create the filesystem on
+        :param size: Size of the filesystem.
+                    Specify size in gigabytes like so:  100G
+                    Specify size in terabytes like so:  1T
+
+                    Floating points will work, but will be converted to bytes
+                    and rounded down.
+
+        :param poolId: ID of the storage pool to create the filesystem on
+        :param supportedProtocols: Specifies the supported protocols of the filesystem:
+                                    0 = NFS (default)
+                                    1 = CIFS
+                                    2 = Mixed
+        :param isThinEnabled: Create the filesystem as thin?
+        :param isDataReductionEnabled: Turn on data reduction for the filesystem (compression)
+        :param isAdvancedDedupEnabled: Turn on advanced deduplication for the filesystem
+        :param infoThreshold: The capacity utilization threshold to send a INFO message
+        :param warningThreshold: The capacity utilization threshold to send an WARNING message
+        :param errorThreshold: The capacity utilization threshold to send an ERROR message
+        :param kwargs: All other optional parameters
+        :return: ID of the filesystem created
+        """
+        res = 'storageResource'
+        act = 'createFilesystem'
+        if size[-1] is 'G':
+            size_bytes = int(float(size[:-1]) * 1073741824)
+        elif size[-1] is 'T':
+            size_bytes = int(float(size[:-1]) * 1099511627776)
+        else:
+            print('Size must be specified like 1G (gigabytes) or 1T (terabytes)')
+            return
+        data = {
+            'name': name,
+            'fsParameters': {
+                'nasServer': {
+                    'id': nasServer
+                },
+                'pool': {
+                    'id': poolId
+                },
+                'size': size_bytes,
+                'supportedProtocols': supportedProtocols,
+                'isThinEnabled': isThinEnabled,
+                'isDataReductionEnabled': isDataReductionEnabled,
+                'isAdvancedDedupEnabled': isAdvancedDedupEnabled,
+                'infoThreshold': infoThreshold,
+                'warningThreshold': warningThreshold,
+                'errorThreshold': errorThreshold
+            }
+        }
+        if kwargs:
+            data.update(kwargs)
+        return self._instance_action(res, act, payload=data)
 
     def get_lun(self, name=None, rid=None, **kwargs):
         """
