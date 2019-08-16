@@ -1488,8 +1488,9 @@ class Unity(object):
         :param name: Name of the filesystem to create
         :param nasServer: Name of the NAS Server to create the filesystem on
         :param size: Size of the filesystem.
-                    Specify size in gigabytes like so:  100G
-                    Specify size in terabytes like so:  1T
+                    Specify size in gigabytes like so:  100G or 100.2G
+                        Not sure why you'd specify a float here, but you do you
+                    Specify size in terabytes like so:  1T or 1.2T
 
                     Floating points will work, but will be converted to bytes
                     and rounded down.
