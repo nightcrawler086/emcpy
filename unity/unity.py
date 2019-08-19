@@ -153,6 +153,12 @@ class Unity(object):
         return response.json()
 
     def _create_instance(self, resource, payload=None):
+        """
+        @todo need to support async requests
+        :param resource:
+        :param payload:
+        :return:
+        """
         if not payload:
             return
         else:
@@ -160,6 +166,26 @@ class Unity(object):
             endpoint = 'https://{}/{}/{}/{}'.format(self.name, 'api/types', resource, 'instances')
             response = self.session.post(endpoint, data=body)
             return response.json()
+
+    def _modify_instance(self, resource, rname=None, rid=None, payload=None):
+        """
+        @todo  Need to support async requests.
+        :param resource:
+        :param rname:
+        :param rid:
+        :param payload:
+        :return:
+        """
+        if rid:
+            endpoint = 'https://{}/{}/{}/{}/{}'.format(self.name, 'api/instances', resource, rid, 'action/modify')
+        elif rname:
+            endpoint = 'https://{}/{}/{}/{}/{}'.format(self.name, 'api/instances', resource, 'name:{}'.format(rname),
+                                                       'action/modify')
+        else:
+            return
+        response = self.session.post(endpoint, params=payload)
+        print(response.url)
+        return response.json()
 
     def _instance_action(self, resource, action, payload=None):
         if not payload:
@@ -170,7 +196,7 @@ class Unity(object):
             response = self.session.post(endpoint, data=body)
             return response.json()
 
-    def get_resource(self, resource, name=None, rid=None, **kwargs):
+    def get(self, resource, name=None, rid=None, **kwargs):
         """
         One query function to rule them all.
 
@@ -207,7 +233,160 @@ class Unity(object):
         else:
             return self._get_collection(res, payload=kwargs)
 
+    # Resource-specific functions
+
+    def new_nasServer(self, name, homeSP, poolId, tenantId=None, **kwargs):
+        """
+        :param name: Name of the NAS Server to create
+        :param homeSP: ID of the SP (spa, spb) to create the NAS Server on
+        :param poolId: ID of the storage pool to create the NAS Server in
+        :param tenantId:  ID of the tenant to create the NAS Server in.  This
+                        argument is optional, but requires a dictionary.
+
+                        This enables you to specify the tenant ID like this:
+
+                        u.new_nasServer(name, homeSP, poolId, tenantId=<id>)
+
+                        Instead of this:
+
+                        u.new_nasServer(name, homeSP, poolId, tenant={'id': <id>})
+        :param kwargs: All additional parameters are named, and optional.
+                        Review the API documentation for information on the
+                        additional properties accepted.
+        :return: ID of the NAS Server that is created:
+
+                    content': {u'id': u'nas_3'}
+        """
+        res = 'nasServer'
+        data = {
+            'name': name,
+            'homeSP': {
+                'id': homeSP
+            },
+            'pool': {
+                'id': poolId
+            }
+        }
+        if tenantId is not None:
+            tenant = {
+                'tenant': {
+                    'id': tenantId
+                }
+            }
+            data.update(tenant)
+        if kwargs:
+            data.update(kwargs)
+        return self._create_instance(res, payload=data)
+
+    def new_filesystem(self, name, nasServer, size, poolId, supportedProtocols,
+                       isThinEnabled='true', isDataReductionEnabled='true',
+                       isAdvancedDedupEnabled='true', infoThreshold=0,
+                       warningThreshold=75, errorThreshold=95, **kwargs):
+        """
+        :param name: Name of the filesystem to create
+        :param nasServer: Name of the NAS Server to create the filesystem on
+        :param size: Size of the filesystem.
+                    Specify size in gigabytes like so:  100G or 100.2G
+                        Not sure why you'd specify a float here, but you do you
+                    Specify size in terabytes like so:  1T or 1.2T
+
+                    Floating points will work, but will be converted to bytes
+                    and rounded down.
+
+        :param poolId: ID of the storage pool to create the filesystem on
+        :param supportedProtocols: Specifies the supported protocols of the filesystem:
+                                    0 = NFS (default)
+                                    1 = CIFS
+                                    2 = Mixed
+        :param isThinEnabled: Create the filesystem as thin?
+        :param isDataReductionEnabled: Turn on data reduction for the filesystem (compression)
+        :param isAdvancedDedupEnabled: Turn on advanced deduplication for the filesystem
+        :param infoThreshold: The capacity utilization threshold to send a INFO message
+        :param warningThreshold: The capacity utilization threshold to send an WARNING message
+        :param errorThreshold: The capacity utilization threshold to send an ERROR message
+        :param kwargs: All other optional parameters
+        :return: ID of the filesystem created
+        """
+        res = 'storageResource'
+        act = 'createFilesystem'
+        if size[-1] is 'G':
+            size_bytes = int(float(size[:-1]) * 1073741824)
+        elif size[-1] is 'T':
+            size_bytes = int(float(size[:-1]) * 1099511627776)
+        else:
+            print('Size must be specified like 1G (gigabytes) or 1T (terabytes)')
+            return
+        data = {
+            'name': name,
+            'fsParameters': {
+                'nasServer': {
+                    'id': nasServer
+                },
+                'pool': {
+                    'id': poolId
+                },
+                'size': size_bytes,
+                'supportedProtocols': supportedProtocols,
+                'isThinEnabled': isThinEnabled,
+                'isDataReductionEnabled': isDataReductionEnabled,
+                'isAdvancedDedupEnabled': isAdvancedDedupEnabled,
+                'infoThreshold': infoThreshold,
+                'warningThreshold': warningThreshold,
+                'errorThreshold': errorThreshold
+            }
+        }
+        if kwargs:
+            data.update(kwargs)
+        return self._instance_action(res, act, payload=data)
+
+    def new_fileDNSServer(self, nasServer, domain, addresses, **kwargs):
+        """
+        :param nasServer: ID of the NAS Server to configure DNS
+        :param domain: Name of the domain
+        :param addresses: Address list (prioritized)
+        :return: ID of the fileDNSServer instance
+        @todo need to test this function
+        """
+        res = 'fileDNSServer'
+        address_list = addresses.split(',')
+        data = {
+            'nasServer': {
+                'id': nasServer
+            },
+            'domain': domain,
+            'addresses': address_list
+        }
+        if kwargs:
+            data.update(kwargs)
+        return self._create_instance(res, payload=data)
+
+    def new_fileInterface(self, nasServer, ipPort, ipAddress, netmask, gateway, **kwargs):
+        """
+        :param nasServer: ID of the NAS Server to create the interface on
+        :param ipPort: The ethernet port on which to create the interface
+        :param ipAddress: IP address of the interface
+        :param netmask: Netmask for the interface
+        :param gateway: Default gateway of the interface
+        :return: ID of the interface created
+        """
+        res = 'fileInterface'
+        data = {
+            'nasServer': {
+                'id': nasServer
+            },
+            'ipPort': {
+                'id': ipPort
+            },
+            'ipAddress': ipAddress,
+            'netmask': netmask,
+            'gateway': gateway
+        }
+        if kwargs:
+            data.update(kwargs)
+        return self._create_instance(res, payload=data)
+
     # Configuring network communication
+
     def get_cifsServer(self, name=None, rid=None, **kwargs):
         """
         :param name: Name of the resource to query (optional)
@@ -591,49 +770,6 @@ class Unity(object):
             return self._get_instance(res, rid=rid, payload=kwargs)
         else:
             return self._get_collection(res, payload=kwargs)
-
-    def new_nasServer(self, name, homeSP, poolId, tenantId=None, **kwargs):
-        """
-        :param name: Name of the NAS Server to create
-        :param homeSP: ID of the SP (spa, spb) to create the NAS Server on
-        :param poolId: ID of the storage pool to create the NAS Server in
-        :param tenantId:  ID of the tenant to create the NAS Server in.  This
-                        argument is optional, but requires a dictionary.
-
-                        This enables you to specify the tenant ID like this:
-
-                        u.new_nasServer(name, homeSP, poolId, tenantId=<id>)
-
-                        Instead of this:
-
-                        u.new_nasServer(name, homeSP, poolId, tenant={'id': <id>})
-        :param kwargs: All additional parameters are named, and optional.
-                        Review the API documentation for information on the
-                        additional properties accepted.
-        :return: ID of the NAS Server that is created:
-
-                    content': {u'id': u'nas_3'}
-        """
-        res = 'nasServer'
-        data = {
-            'name': name,
-            'homeSP': {
-                'id': homeSP
-            },
-            'pool': {
-                'id': poolId
-            }
-        }
-        if tenantId is not None:
-            tenant = {
-                'tenant': {
-                    'id': tenantId
-                }
-            }
-            data.update(tenant)
-        if kwargs:
-            data.update(kwargs)
-        return self._create_instance(res, payload=data)
 
     def get_nfsServer(self, rid=None, **kwargs):
         """
@@ -1479,67 +1615,6 @@ class Unity(object):
             return self._get_instance(res, rid=rid, payload=kwargs)
         else:
             return self._get_collection(res, payload=kwargs)
-
-    def new_filesystem(self, name, nasServer, size, poolId, supportedProtocols,
-                       isThinEnabled='true', isDataReductionEnabled='true',
-                       isAdvancedDedupEnabled='true', infoThreshold=0,
-                       warningThreshold=75, errorThreshold=95, **kwargs):
-        """
-        :param name: Name of the filesystem to create
-        :param nasServer: Name of the NAS Server to create the filesystem on
-        :param size: Size of the filesystem.
-                    Specify size in gigabytes like so:  100G or 100.2G
-                        Not sure why you'd specify a float here, but you do you
-                    Specify size in terabytes like so:  1T or 1.2T
-
-                    Floating points will work, but will be converted to bytes
-                    and rounded down.
-
-        :param poolId: ID of the storage pool to create the filesystem on
-        :param supportedProtocols: Specifies the supported protocols of the filesystem:
-                                    0 = NFS (default)
-                                    1 = CIFS
-                                    2 = Mixed
-        :param isThinEnabled: Create the filesystem as thin?
-        :param isDataReductionEnabled: Turn on data reduction for the filesystem (compression)
-        :param isAdvancedDedupEnabled: Turn on advanced deduplication for the filesystem
-        :param infoThreshold: The capacity utilization threshold to send a INFO message
-        :param warningThreshold: The capacity utilization threshold to send an WARNING message
-        :param errorThreshold: The capacity utilization threshold to send an ERROR message
-        :param kwargs: All other optional parameters
-        :return: ID of the filesystem created
-        """
-        res = 'storageResource'
-        act = 'createFilesystem'
-        if size[-1] is 'G':
-            size_bytes = int(float(size[:-1]) * 1073741824)
-        elif size[-1] is 'T':
-            size_bytes = int(float(size[:-1]) * 1099511627776)
-        else:
-            print('Size must be specified like 1G (gigabytes) or 1T (terabytes)')
-            return
-        data = {
-            'name': name,
-            'fsParameters': {
-                'nasServer': {
-                    'id': nasServer
-                },
-                'pool': {
-                    'id': poolId
-                },
-                'size': size_bytes,
-                'supportedProtocols': supportedProtocols,
-                'isThinEnabled': isThinEnabled,
-                'isDataReductionEnabled': isDataReductionEnabled,
-                'isAdvancedDedupEnabled': isAdvancedDedupEnabled,
-                'infoThreshold': infoThreshold,
-                'warningThreshold': warningThreshold,
-                'errorThreshold': errorThreshold
-            }
-        }
-        if kwargs:
-            data.update(kwargs)
-        return self._instance_action(res, act, payload=data)
 
     def get_lun(self, name=None, rid=None, **kwargs):
         """
