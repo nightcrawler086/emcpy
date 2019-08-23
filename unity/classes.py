@@ -12,7 +12,7 @@ class fsParameters(object):
             print('Size must be specified like 1G (gigabytes) or 1T (terabytes)')
             return
         self.size = size_bytes
-        self.__dict__.update((k, v) for k, v in kwargs.items() if k in attributes)
+        self.__dict__.update(kwargs)
 
 
 class pool(object):
@@ -28,6 +28,7 @@ class nasServer(object):
 class replicationParameters(object):
     def __init__(self, **kwargs):
         self.__dict__.update(kwargs)
+
 
 class snapScheduleParameters(object):
     def __init__(self, **kwargs):
@@ -47,22 +48,39 @@ class cifsFileSystemParameters:
 class StorageResourceFilesystem:
     def __init__(self, name, poolId, nasServerId, size, **kwargs):
         self.name = name
-        filesystem_parameters = {'supportedProtocols', 'flrVersion', 'flrMinRetention', 'flrDefaultRetention',
-                                'flrMaxRetention', 'isFlrAutoLockEnabled', 'isFlrAutoDeleteEnabled', 'flrAutoLockDelay',
-                                'errorThreshold', 'warningThreshold', 'infoThreshold', 'isThinEnabled',
-                                'isDataReductionEnabled', 'isAdvancedDedupEnabled', 'size', 'hostIOSize',
-                                'sizeAllocated', 'minSizeAllocated', 'isCacheDisabled', 'accessPolicy',
-                                'folderRenamePolicy', 'lockingPolicy', 'poolFullPolicy'}
+        fs_params = {'supportedProtocols', 'flrVersion', 'flrMinRetention', 'flrDefaultRetention',
+                     'flrMaxRetention', 'isFlrAutoLockEnabled', 'isFlrAutoDeleteEnabled', 'flrAutoLockDelay',
+                     'errorThreshold', 'warningThreshold', 'infoThreshold', 'isThinEnabled',
+                     'isDataReductionEnabled', 'isAdvancedDedupEnabled', 'size', 'hostIOSize',
+                     'sizeAllocated', 'minSizeAllocated', 'isCacheDisabled', 'accessPolicy',
+                     'folderRenamePolicy', 'lockingPolicy', 'poolFullPolicy'}
+        rep_params = {'isReplicationDestination'}
+        snap_params = {'snapSchedule', 'isSnapSchedulePaused'}
+        cifs_params = {'isCIFSSyncWritesEnabled', 'isCIFSOpLocksEnabled', 'isCIFSNotifyOnWriteEnabled',
+                       'isCIFSNotifyOnAccessEnabled', 'cifsNotifyOnChangeDirDepth'}
         self.fsParameters = fsParameters(size)
         self.fsParameters.pool = pool(poolId)
         self.fsParameters.nasServer = nasServer(nasServerId)
+        for k, v in kwargs.items():
+            if k in fs_params:
+                self.fsParameters.__setattr__(k, v)
+            elif k in rep_params:
+                self.replicationParameters = replicationParameters()
+                self.replicationParameters.__setattr__(k, v)
+            elif k in snap_params:
+                if k is 'snapSchedule':
+                    self.snapScheduleParameters = snapScheduleParameters()
+                    self.snapScheduleParameters.snapSchedule = snapSchedule()
+                    self.snapScheduleParameters.snapSchedule.__setattr__(k, v)
+                else:
+                    self.snapScheduleParameters.__setattr__(k, v)
+            elif k in cifs_params:
+                if 'cifsFsParameters' not in self.__dict__:
+                    self.cifsFsParameters = cifsFileSystemParameters()
+                    self.cifsFsParameters.__setattr__(k, v)
+                else:
+                    self.cifsFsParameters.__setattr__(k, v)
 
-    def to_json(self):
+    def jsonify(self):
         json_data = json.dumps(self.__dict__, default=lambda o: o.__dict__, indent=4)
         return json_data
-
-
-
-
-
-
