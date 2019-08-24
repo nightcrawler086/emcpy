@@ -348,6 +348,9 @@ class Unity(object):
             data.update(kwargs)
         return self._create_instance(res, payload=data)
 
+# Was doing single functions for queries...
+# screw that...use the get function and specify the resource
+"""
     # Configuring network communication
 
     def get_cifsServer(self, name=None, rid=None, **kwargs):
@@ -1745,3 +1748,4 @@ class Unity(object):
     ## Quality Of Service
     ## Servicing the system
     ## User and security
+"""
