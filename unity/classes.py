@@ -1,6 +1,11 @@
 import json
 
 
+class storageProcessor(object):
+    def __init__(self, **kwargs):
+        self.__dict__.update(kwargs)
+
+
 class fsParameters(object):
     def __init__(self, size, **kwargs):
 
@@ -21,7 +26,7 @@ class pool(object):
 
 
 class nasServer(object):
-    def __init__(self, nasServerId):
+    def __init__(self, nasServerId, **kwargs):
         self.id = nasServerId
 
 
@@ -84,3 +89,5 @@ class StorageResourceFilesystem:
     def jsonify(self):
         json_data = json.dumps(self.__dict__, default=lambda o: o.__dict__, indent=4)
         return json_data
+
+
