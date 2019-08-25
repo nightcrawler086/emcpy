@@ -3,7 +3,7 @@ import json
 import requests
 
 
-class Unity(object):
+class Unity:
     """
     Initializes the object.
 
@@ -29,6 +29,7 @@ class Unity(object):
         self.user = user
         self.password = password
         self.session = None
+        self.storage = None
 
     def __getattr__(self, attr):
         """
@@ -99,6 +100,7 @@ class Unity(object):
             token = login.headers.get('EMC-CSRF-TOKEN')
             session.headers.update({'EMC-CSRF-TOKEN': token})
             self.session = session
+            self.storage = Storage()
 
     def disconnect(self):
         """
@@ -118,14 +120,17 @@ class Unity(object):
             self.session.post(logout_uri, verify=False)
             # Reset the session to None after logout occurs.
             self.session = None
+            self.storage = None
         else:
             print('There is no active session to disconnect for this object')
             return
 
-    def jsonify(self, data):
+    @staticmethod
+    def jsonify(data):
         json_data = json.dumps(data.__dict__, default=lambda o: o.__dict__, indent=4)
         return json_data
 
+    """
     def _get_collection(self,  resource, payload=None):
         """
         Internal function for collection queries
@@ -149,14 +154,14 @@ class Unity(object):
             return
         response = self.session.get(endpoint, params=payload)
         return response.json()
-
-    def _delete_instance(self, resource, rid, payload=None):
+    """
+    def delete(self, resource, rid, payload=None):
         payload = payload or {}
         endpoint = 'https://{}/{}/{}/{}'.format(self.name, 'api/instances', resource, rid)
         response = self.session.delete(endpoint, params=payload)
         return response.json()
 
-    def new(self, resource, payload=None):
+    def create(self, resource, payload=None):
         """
         @todo need to support async requests
         :param resource:
@@ -166,12 +171,12 @@ class Unity(object):
         if not payload:
             return
         else:
-            body = self.jsonify(payload)
+            body = self.jsonify
             endpoint = 'https://{}/{}/{}/{}'.format(self.name, 'api/types', resource, 'instances')
             response = self.session.post(endpoint, data=body)
             return response.json()
 
-    def _modify_instance(self, resource, rname=None, rid=None, payload=None):
+    def modify(self, resource, rname=None, rid=None, payload=None):
         """
         @todo  Need to support async requests.
         :param resource:
@@ -215,7 +220,7 @@ class Unity(object):
 
         :param resource:  Type of the resource to query
         :param name: Name of the resource to query (optional)
-        :param rid: Internal ID (rid = Resource ID) to query (optional)
+        :param id: Internal ID (rid = Resource ID) to query (optional)
         :param kwargs: Additional keyword arguments to modify the query:
                         fields:  Comma separated list of fields to return
                         filter:  Filter for the query
@@ -226,20 +231,17 @@ class Unity(object):
                     other fields are specified, and they are available via
                     this resource, they will be returned.
         """
-        if name and rid:
+        if name and id:
             print('You cannot specify both a name and an ID.')
             return
         elif name:
-            return self._get_instance(resource, rname=name, payload=kwargs)
-        elif rid:
-            return self._get_instance(resource, rid=rid, payload=kwargs)
+            endpoint = 'https://{}/{}/{}/{}'.format(self.name, 'api/instances', resource, 'name{}'.format(name))
+        elif id:
+            endpoint = 'https://{}/{}/{}/{}'.format(self.name, 'api/instances', resource, id)
         else:
-            return self._get_collection(resource, payload=kwargs)
-
-    #def new(self, resource, payload=None):
-
-
-    # Resource-specific functions
+            endpoint = 'https://{}/{}/{}/{}'.format(self.name, 'api/types', resource, 'instances')
+        response = self.session.get(endpoint, params=kwargs)
+        return response.json()
 
     def new_nasServer(self, name, homeSP, poolId, tenantId=None, **kwargs):
         """
@@ -303,7 +305,7 @@ class Unity(object):
         res = 'storageResource'
         act = 'createFilesystem'
         fs = classes.StorageResourceFilesystem(name, poolId, nasServer, size, **kwargs)
-        data = fs.jsonify()
+        data = fs.jsonify
         print(data)
         return self._instance_action(res, act, payload=data)
 
@@ -352,4 +354,10 @@ class Unity(object):
         if kwargs:
             data.update(kwargs)
         return self._create_instance(res, payload=data)
+
+
+class Storage(Unity):
+    def __init__(self):
+        Unity.__init__()
+        self.session = super().session
 
