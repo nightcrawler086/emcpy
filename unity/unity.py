@@ -122,6 +122,10 @@ class Unity(object):
             print('There is no active session to disconnect for this object')
             return
 
+    def jsonify(self, data):
+        json_data = json.dumps(data.__dict__, default=lambda o: o.__dict__, indent=4)
+        return json_data
+
     def _get_collection(self,  resource, payload=None):
         """
         Internal function for collection queries
@@ -144,7 +148,6 @@ class Unity(object):
         else:
             return
         response = self.session.get(endpoint, params=payload)
-        print(response.url)
         return response.json()
 
     def _delete_instance(self, resource, rid, payload=None):
@@ -153,7 +156,7 @@ class Unity(object):
         response = self.session.delete(endpoint, params=payload)
         return response.json()
 
-    def _create_instance(self, resource, payload=None):
+    def new(self, resource, payload=None):
         """
         @todo need to support async requests
         :param resource:
@@ -163,7 +166,7 @@ class Unity(object):
         if not payload:
             return
         else:
-            body = json.dumps(payload)
+            body = self.jsonify(payload)
             endpoint = 'https://{}/{}/{}/{}'.format(self.name, 'api/types', resource, 'instances')
             response = self.session.post(endpoint, data=body)
             return response.json()
@@ -223,16 +226,18 @@ class Unity(object):
                     other fields are specified, and they are available via
                     this resource, they will be returned.
         """
-        res = resource
         if name and rid:
             print('You cannot specify both a name and an ID.')
             return
         elif name:
-            return self._get_instance(res, rname=name, payload=kwargs)
+            return self._get_instance(resource, rname=name, payload=kwargs)
         elif rid:
-            return self._get_instance(res, rid=rid, payload=kwargs)
+            return self._get_instance(resource, rid=rid, payload=kwargs)
         else:
-            return self._get_collection(res, payload=kwargs)
+            return self._get_collection(resource, payload=kwargs)
+
+    def new(self, resource, payload=None):
+
 
     # Resource-specific functions
 
@@ -1741,11 +1746,4 @@ class Unity(object):
             return self._get_instance(res, rid=rid, payload=kwargs)
         else:
             return self._get_collection(res, payload=kwargs)
-    ## Managing the environment
-    ## Managing the system
-    ## Monitoring capacity and performance
-    ## Protecting data
-    ## Quality Of Service
-    ## Servicing the system
-    ## User and security
 """
