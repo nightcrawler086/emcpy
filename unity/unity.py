@@ -236,7 +236,7 @@ class Unity(object):
         else:
             return self._get_collection(resource, payload=kwargs)
 
-    def new(self, resource, payload=None):
+    #def new(self, resource, payload=None):
 
 
     # Resource-specific functions

@@ -49,7 +49,7 @@ class fsParameters(object):
         self.__dict__.update(kwargs)
 
 
-class StorageResourceFilesystem:
+class Filesystem:
     def __init__(self, name, poolId, nasServerId, size, **kwargs):
         self.name = name
         fs_params = {'supportedProtocols', 'flrVersion', 'flrMinRetention', 'flrDefaultRetention',
@@ -106,5 +106,44 @@ class fileInterface:
     def __init__(self, nasServerId, ipPortId, ipAddress, **kwargs):
         self.nasServer = IdObject(nasServerId)
         self.ipPort = IdObject(ipPortId)
+        self.ipAddress = ipAddress
+        self.__dict__.update(kwargs)
+
+
+class fileLDAPServer:
+    def __init__(self, nasServerId, authenticationType, authority, serverAddresses=None, **kwargs):
+        self.nasServer = IdObject(nasServerId)
+        self.authenticationType = authenticationType
+        self.authority = authority
+        if type(serverAddresses) == list:
+            self.serverAddresses = serverAddresses
+        else:
+            self.serverAddresses = serverAddresses.split(',')
+
+
+class fileNDMPServer:
+    def __init__(self, nasServerId, **kwargs):
+        self.nasServer = IdObject(nasServerId)
+        self.__dict__.update(kwargs)
+
+
+class nasServer:
+    def __init__(self, name, homeSP, poolId, **kwargs):
+        self.name = name
+        self.homeSP = IdObject(homeSP)
+        self.pool = IdObject(poolId)
+        for k, v in kwargs.items():
+            if k == 'tenant':
+                self.tenant = IdObject(v)
+            else:
+                self.__setattr__(k, v)
+
+
+class nfsServer:
+    def __init__(self, nasServerId, **kwargs):
+        self.nasServer = IdObject(nasServerId)
+        self.__dict__.update(kwargs)
+
+
 
 
