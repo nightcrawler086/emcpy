@@ -100,7 +100,7 @@ class Unity:
             token = login.headers.get('EMC-CSRF-TOKEN')
             session.headers.update({'EMC-CSRF-TOKEN': token})
             self.session = session
-            self.storage = Storage()
+            self.storage = Storage(session)
 
     def disconnect(self):
         """
@@ -130,31 +130,6 @@ class Unity:
         json_data = json.dumps(data.__dict__, default=lambda o: o.__dict__, indent=4)
         return json_data
 
-    """
-    def _get_collection(self,  resource, payload=None):
-        """
-        Internal function for collection queries
-        @todo -> need to add a decorator to process HTTP responses
-        :param resource:
-        :param payload:
-        :return:
-        """
-        payload = payload or {}
-        endpoint = 'https://{}/{}/{}/{}'.format(self.name, 'api/types', resource, 'instances')
-        response = self.session.get(endpoint, params=payload)
-        return response.json()
-
-    def _get_instance(self, resource, rname=None, rid=None, payload=None):
-        payload = payload or {'compact': 'true'}
-        if rid:
-            endpoint = 'https://{}/{}/{}/{}'.format(self.name, 'api/instances', resource, rid)
-        elif rname:
-            endpoint = 'https://{}/{}/{}/{}'.format(self.name, 'api/instances', resource, 'name:{}'.format(rname))
-        else:
-            return
-        response = self.session.get(endpoint, params=payload)
-        return response.json()
-    """
     def delete(self, resource, rid, payload=None):
         payload = payload or {}
         endpoint = 'https://{}/{}/{}/{}'.format(self.name, 'api/instances', resource, rid)
@@ -200,7 +175,7 @@ class Unity:
         if not payload:
             return
         else:
-            #body = json.dumps(payload)
+            # body = json.dumps(payload)
             endpoint = 'https://{}/{}/{}/{}/{}'.format(self.name, 'api/types', resource, 'action', action)
             response = self.session.post(endpoint, data=payload)
             return response.json()
@@ -356,8 +331,10 @@ class Unity:
         return self._create_instance(res, payload=data)
 
 
-class Storage(Unity):
-    def __init__(self):
-        Unity.__init__()
-        self.session = super().session
+class Storage:
+    def __init__(self, session):
+        self.session = session
+
+    def test(self):
+        print('Does tis even work')
 
