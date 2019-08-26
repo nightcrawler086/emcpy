@@ -100,7 +100,7 @@ class Unity:
             token = login.headers.get('EMC-CSRF-TOKEN')
             session.headers.update({'EMC-CSRF-TOKEN': token})
             self.session = session
-            self.storage = Storage(session)
+            self.storage = Storage(self.name, self.session)
 
     def disconnect(self):
         """
@@ -332,9 +332,29 @@ class Unity:
 
 
 class Storage:
-    def __init__(self, session):
+    def __init__(self, name, session):
+        self.name = name
         self.session = session
 
-    def test(self):
-        print('Does tis even work')
+    @staticmethod
+    def jsonify(data):
+        json_data = json.dumps(data.__dict__, default=lambda o: o.__dict__, indent=4)
+        return json_data
+
+    def create(self, resource, payload=None):
+        """
+
+        :param resource:
+        :param payload:
+        :return:
+        """
+        action = 'create{}'.format(resource)
+        if not payload:
+            print('You need to give me something to post if you want me to create something')
+            return
+        else:
+            endpoint = 'https://{}/{}/{}'.format(self.name, 'api/types/action', action)
+            body = self.jsonify(payload)
+            response = self.session.post(endpoint, data=body)
+            return response.json()
 
