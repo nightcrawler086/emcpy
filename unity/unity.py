@@ -210,7 +210,7 @@ class Unity:
             print('You cannot specify both a name and an ID.')
             return
         elif name:
-            endpoint = 'https://{}/{}/{}/{}'.format(self.name, 'api/instances', resource, 'name{}'.format(name))
+            endpoint = 'https://{}/{}/{}/{}'.format(self.name, 'api/instances', resource, 'name:{}'.format(name))
         elif id:
             endpoint = 'https://{}/{}/{}/{}'.format(self.name, 'api/instances', resource, id)
         else:
@@ -341,6 +341,17 @@ class Storage:
         json_data = json.dumps(data.__dict__, default=lambda o: o.__dict__, indent=4)
         return json_data
 
+    def get(self, id=None, name=None, **kwargs):
+        if name and id:
+            print('You cannot specify a name and an ID.')
+            return
+        elif id:
+            endpoint = 'https://{}/{}/{}'.format(self.name, 'api/instances/storageResource', id)
+        elif name:
+            endpoint = 'https://{}.{}.{}'.format(self.name, 'api/instances/storageResource', 'name{}'.format(name))
+        else:
+            endpoint = 'https://{}/{}'.format(self.name, 'api/types/storageResource/instances')
+
     def create(self, resource, payload=None):
         """
 
@@ -358,3 +369,44 @@ class Storage:
             response = self.session.post(endpoint, data=body)
             return response.json()
 
+    def delete(self, id=None, name=None, payload=None):
+        if name and id:
+            print('Cannot specify a name and an ID.')
+            return
+        elif name:
+            endpoint = 'https://{}/{}/{}'.format(self.name, 'api/instances/storageResource', 'name:{}'.format(name))
+        elif id:
+            endpoint = 'https://{}/{}/{}'.format(self.name, 'api/instances/storageResource', id)
+        else:
+            print('No resource specified.')
+            return
+        body = self.jsonify(payload)
+        response = self.session.delete(endpoint, data=body)
+        return response.json()
+
+    def modify(self, resource, id=None, name=None, payload=None):
+        """
+
+        :param resource:
+        :param id:
+        :param name:
+        :param payload:
+        :return:
+        """
+        action = 'modify{}'.format(resource)
+        if not payload:
+            print('You gave me nothing to change.')
+            return
+        if name and id:
+            print('You cannot specify a name and an ID.')
+            return
+        elif name:
+            endpoint = 'https://{}/{}/{}/{}'.format(self.name, 'api/instances/storageResource', 'name:{}'.format(name), action)
+        elif id:
+            endpoint = 'https:/{}/{}/{}/{}'.format(self.name, 'api/instances/storageResource', id, action)
+        else:
+            print('No instance name or ID given')
+            return
+        body = self.jsonify(payload)
+        response = self.session.post(endpoint, data=body)
+        return response.json()
