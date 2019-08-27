@@ -17,7 +17,7 @@ class IdObject(object):
         self.id = oId
 
 
-class optObject(object):
+class OptObject(object):
     """
     This class is used for all optional parameters.  It only updates itself
     with everything from **kwargs.
@@ -64,23 +64,24 @@ class Filesystem:
                        'isCIFSNotifyOnAccessEnabled', 'cifsNotifyOnChangeDirDepth'}
         self.fsParameters = fsParameters(size)
         self.fsParameters.pool = IdObject(poolId)
-        self.fsParameters.nasServer = idObject(nasServerId)
+        self.fsParameters.nasServer = IdObject(nasServerId)
         for k, v in kwargs.items():
             if k in fs_params:
                 self.fsParameters.__setattr__(k, v)
             elif k in rep_params:
-                self.replicationParameters = optObject()
+                if not hasattr(self, 'replicationParameters'):
+                    self.replicationParameters = OptObject()
                 self.replicationParameters.__setattr__(k, v)
             elif k in snap_params:
                 if k is 'snapSchedule':
-                    self.snapScheduleParameters = optObject()
-                    self.snapScheduleParameters.snapSchedule = optObject()
+                    self.snapScheduleParameters = OptObject()
+                    self.snapScheduleParameters.snapSchedule = OptObject()
                     self.snapScheduleParameters.snapSchedule.__setattr__(k, v)
                 else:
                     self.snapScheduleParameters.__setattr__(k, v)
             elif k in cifs_params:
                 if 'cifsFsParameters' not in self.__dict__:
-                    self.cifsFsParameters = optObject()
+                    self.cifsFsParameters = OptObject()
                     self.cifsFsParameters.__setattr__(k, v)
                 else:
                     self.cifsFsParameters.__setattr__(k, v)
@@ -111,6 +112,9 @@ class fileInterface:
 
 
 class fileLDAPServer:
+    """
+    @todo Incomplete
+    """
     def __init__(self, nasServerId, authenticationType, authority, serverAddresses=None, **kwargs):
         self.nasServer = IdObject(nasServerId)
         self.authenticationType = authenticationType
