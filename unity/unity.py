@@ -64,9 +64,9 @@ class Unity:
             return self.__dict__[attr]
         else:
             if self.session is None:
-                print('Not connected.')
+                print('Not connected.  You must execute connect() first.')
             else:
-                return Unity._get_collection(self, attr)
+                return Unity.get(self, attr)
 
     def connect(self):
         """
@@ -91,16 +91,21 @@ class Unity:
                     'X-EMC-REST-CLIENT': 'true'
             }
             requests.packages.urllib3.disable_warnings()
-            login_uri = 'https://{}/{}/{}'.format(self.name, 'api/types', 'system/instances')
+            login_uri = 'https://{}/{}'.format(self.name, 'api/instances/system/0')
             session = requests.Session()
             session.headers.update(headers)
             session.auth = (self.user, self.password)
-            login = session.get(login_uri, verify=False)
+            parameters = {
+                'compact': 'true',
+                'fields': 'name,platform,model,serialNumber'
+            }
+            login = session.get(login_uri, verify=False, params=parameters)
             # print(login.json())
             token = login.headers.get('EMC-CSRF-TOKEN')
             session.headers.update({'EMC-CSRF-TOKEN': token})
             self.session = session
             self.storage = Storage(self.name, self.session)
+            return login.json()
 
     def disconnect(self):
         """
@@ -151,34 +156,24 @@ class Unity:
             response = self.session.post(endpoint, data=body)
             return response.json()
 
-    def modify(self, resource, rname=None, rid=None, payload=None):
+    def modify(self, resource, rname=None, id=None, **kwargs):
         """
         @todo  Need to support async requests.
         :param resource:
         :param rname:
-        :param rid:
-        :param payload:
+        :param id:
         :return:
         """
-        if rid:
-            endpoint = 'https://{}/{}/{}/{}/{}'.format(self.name, 'api/instances', resource, rid, 'action/modify')
+        if id:
+            endpoint = 'https://{}/{}/{}/{}/{}'.format(self.name, 'api/instances', resource, id, 'action/modify')
         elif rname:
             endpoint = 'https://{}/{}/{}/{}/{}'.format(self.name, 'api/instances', resource, 'name:{}'.format(rname),
                                                        'action/modify')
         else:
             return
-        response = self.session.post(endpoint, params=payload)
-        print(response.url)
-        return response.json()
-
-    def _instance_action(self, resource, action, payload=None):
-        if not payload:
-            return
-        else:
-            # body = json.dumps(payload)
-            endpoint = 'https://{}/{}/{}/{}/{}'.format(self.name, 'api/types', resource, 'action', action)
-            response = self.session.post(endpoint, data=payload)
-            return response.json()
+        body = json.dumps(kwargs)
+        response = self.session.post(endpoint, data=body)
+        print(response)
 
     def get(self, resource, name=None, id=None, **kwargs):
         """
