@@ -135,11 +135,30 @@ class Unity:
         json_data = json.dumps(data.__dict__, default=lambda o: o.__dict__, indent=4)
         return json_data
 
-    def delete(self, resource, rid, payload=None):
-        payload = payload or {}
-        endpoint = 'https://{}/{}/{}/{}'.format(self.name, 'api/instances', resource, rid)
-        response = self.session.delete(endpoint, params=payload)
-        return response.json()
+    def delete(self, resource, name=None, id=None, timeout=None, **kwargs):
+        """
+
+        :param resource:
+        :param name:
+        :param id:
+        :param timeout:
+        :param kwargs:
+        :return:
+        """
+        if name and id:
+            print('You cannot specify a name and an ID.')
+            return
+        elif name:
+            endpoint = 'https://{}/{}/{}/{}'.format(self.name, 'api/instances', resource, 'name:{}'.format(name))
+        elif id:
+            endpoint = 'https://{}/{}/{}/{}'.format(self.name, 'api/instances', resource, id)
+        else:
+            print('No instance to given to delete.')
+            return
+        timeout = timeout or {}
+        body = json.dumps(kwargs)
+        response = self.session.delete(endpoint, params=timeout, data=body)
+        return response
 
     def create(self, resource, payload=None):
         """
@@ -156,12 +175,12 @@ class Unity:
             response = self.session.post(endpoint, data=body)
             return response.json()
 
-    def modify(self, resource, rname=None, id=None, **kwargs):
+    def modify(self, resource, iname=None, id=None, timeout=None, **kwargs):
         """
-        @todo  Need to support async requests.
         :param resource:
-        :param rname:
+        :param iname:
         :param id:
+        :param timeout:
         :return:
         """
         if id:
@@ -171,9 +190,10 @@ class Unity:
                                                        'action/modify')
         else:
             return
+        timeout = timeout or {}
         body = json.dumps(kwargs)
-        response = self.session.post(endpoint, data=body)
-        print(response)
+        response = self.session.post(endpoint, params=timeout, data=body)
+        return response
 
     def get(self, resource, name=None, id=None, **kwargs):
         """
