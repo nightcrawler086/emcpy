@@ -1,6 +1,7 @@
-from unity import classes
+from collections import namedtuple
 import json
 import requests
+from unity import classes
 
 
 class Unity:
@@ -135,6 +136,16 @@ class Unity:
         json_data = json.dumps(data.__dict__, default=lambda o: o.__dict__, indent=4)
         return json_data
 
+    """
+    @staticmethod
+    def json_object_hook(d):
+        return namedtuple('X', d.keys())(*d.values())
+
+    @staticmethod
+    def json2obj(data):
+        return json.loads(data, object_hook=Unity.json_object_hook)
+    """
+
     def delete(self, resource, name=None, id=None, timeout=None, **kwargs):
         """
 
@@ -160,20 +171,23 @@ class Unity:
         response = self.session.delete(endpoint, params=timeout, data=body)
         return response
 
-    def create(self, resource, payload=None):
+    def create(self, resource, *args, timeout=None, **kwargs):
         """
         @todo need to support async requests
         :param resource:
         :param payload:
         :return:
         """
-        if not payload:
-            return
-        else:
-            body = self.jsonify
-            endpoint = 'https://{}/{}/{}/{}'.format(self.name, 'api/types', resource, 'instances')
-            response = self.session.post(endpoint, data=body)
-            return response.json()
+        class_name = getattr(classes, resource)
+        if not class_name:
+            print('Invalid resource name or class does not exist.')
+        print(args)
+        obj = class_name(*args, **kwargs)
+        body = Unity.jsonify(obj)
+        timeout = timeout or {}
+        endpoint = 'https://{}/{}/{}/{}'.format(self.name, 'api/types', resource, 'instances')
+        response = self.session.post(endpoint, data=body, params=timeout)
+        return response.json()
 
     def modify(self, resource, iname=None, id=None, timeout=None, **kwargs):
         """
@@ -185,8 +199,8 @@ class Unity:
         """
         if id:
             endpoint = 'https://{}/{}/{}/{}/{}'.format(self.name, 'api/instances', resource, id, 'action/modify')
-        elif rname:
-            endpoint = 'https://{}/{}/{}/{}/{}'.format(self.name, 'api/instances', resource, 'name:{}'.format(rname),
+        elif iname:
+            endpoint = 'https://{}/{}/{}/{}/{}'.format(self.name, 'api/instances', resource, 'name:{}'.format(iname),
                                                        'action/modify')
         else:
             return
@@ -363,11 +377,13 @@ class Storage:
         elif id:
             endpoint = 'https://{}/{}/{}'.format(self.name, 'api/instances/storageResource', id)
         elif name:
-            endpoint = 'https://{}.{}.{}'.format(self.name, 'api/instances/storageResource', 'name{}'.format(name))
+            endpoint = 'https://{}/{}/{}'.format(self.name, 'api/instances/storageResource', 'name:{}'.format(name))
         else:
             endpoint = 'https://{}/{}'.format(self.name, 'api/types/storageResource/instances')
+        response = self.session.get(endpoint, params=kwargs)
+        return response.json()
 
-    def create(self, resource, payload=None):
+    def create(self, resource, *args, timeout=None, **kwargs):
         """
 
         :param resource:
@@ -375,16 +391,18 @@ class Storage:
         :return:
         """
         action = 'create{}'.format(resource)
-        if not payload:
-            print('You need to give me something to post if you want me to create something')
+        class_name = getattr(classes, resource)
+        if not class_name:
+            print('Invalid resource name or class does not exist.')
             return
-        else:
-            endpoint = 'https://{}/{}/{}'.format(self.name, 'api/types/action', action)
-            body = self.jsonify(payload)
-            response = self.session.post(endpoint, data=body)
-            return response.json()
+        obj = class_name(*args, **kwargs)
+        endpoint = 'https://{}/{}/{}'.format(self.name, 'api/types/storageResource/action', action)
+        body = Unity.jsonify(obj)
+        timeout = timeout or {}
+        response = self.session.post(endpoint, params=timeout, data=body)
+        return response.json()
 
-    def delete(self, id=None, name=None, payload=None):
+    def delete(self, id=None, name=None, timeout=None, **kwargs):
         if name and id:
             print('Cannot specify a name and an ID.')
             return
@@ -395,11 +413,11 @@ class Storage:
         else:
             print('No resource specified.')
             return
-        body = self.jsonify(payload)
-        response = self.session.delete(endpoint, data=body)
-        return response.json()
+        body = json.dumps(kwargs)
+        response = self.session.delete(endpoint, params=timeout, data=body)
+        return response
 
-    def modify(self, resource, id=None, name=None, payload=None):
+    def modify(self, resource, id=None, name=None, timeout=None, **kwargs):
         """
 
         :param resource:
@@ -408,20 +426,19 @@ class Storage:
         :param payload:
         :return:
         """
-        action = 'modify{}'.format(resource)
-        if not payload:
-            print('You gave me nothing to change.')
-            return
         if name and id:
             print('You cannot specify a name and an ID.')
             return
         elif name:
-            endpoint = 'https://{}/{}/{}/{}'.format(self.name, 'api/instances/storageResource', 'name:{}'.format(name), action)
+            action = 'modify{}ByName'.format(resource)
+            endpoint = 'https://{}/{}/{}/{}'.format(self.name, 'api/instances/storageResource', 'name:{}'.format(name), 'action/{}'.format(action))
         elif id:
-            endpoint = 'https:/{}/{}/{}/{}'.format(self.name, 'api/instances/storageResource', id, action)
+            action = 'modify{}'.format(resource)
+            endpoint = 'https://{}/{}/{}/{}'.format(self.name, 'api/instances/storageResource', id, 'action/{}'.format(action))
         else:
             print('No instance name or ID given')
             return
-        body = self.jsonify(payload)
-        response = self.session.post(endpoint, data=body)
-        return response.json()
+        body = json.dumps(kwargs)
+        timeout = timeout or {}
+        response = self.session.post(endpoint, data=body, params=timeout)
+        return response
