@@ -17,16 +17,26 @@ Python Client for EMC NAS (Unity/VNX) Platforms
 
 ### Query a collection (filesystem)
 
-`> nas.get_filesystem()`
+`> nas.filesystem`
 
-### Query an instance by name (filesystem)
+If you want to add parameters to the query use the `get` function.
 
-`> nas.get_filesystem(name='myFilesystem')`
+`> nas.get('filesystem', fields='name,id', compact='true')`
 
-### Query an instance by ID (filesystem)
+### Query an instance (filesystem)
 
-`> nas.get_filesystem(rid='fs_1')`
+By name:
 
-### Query an instance with field specifications and query modifiers (filesystem)
+`> nas.get('filesystem', name='myFilesystem')`
 
-`> nas.get_filesystem(name='myFilesystem', fields='id,name,sizeUsed', compact='true')`
+Or by ID:
+
+`> nas.get('filesystem', id='fs_3')`
+
+### Create a NAS Server
+
+`> nas.create('nasServer', 'cifs01', 'spa', 'pool_1')`
+
+`cifs01` is the name of the NAS Server.
+`spa` is the ID of the home Service Processor.
+`pool_1` is the ID of the storage pool.
