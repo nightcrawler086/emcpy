@@ -1,31 +1,17 @@
-from collections import namedtuple
 import json
 import requests
 from unity import classes
 
 
 class Unity:
-    """
-    Initializes the object.
 
-    Design:
-
-    All methods defined in this class will follow a specific pattern:
-
-    _function_name - This is an internal function, not meant to be used directly
-
-
-    Function Arguments:
-
-    All required arguments for the function will be positional (and therefore
-    required).  All optional arguments will be named (**kwargs).  The only exception
-    is optional arguments that require a dictionary:
-
-        myArgument={'id': 'myId'}
-
-    @todo Need to add some unittests for all the methods
-    """
     def __init__(self, name, user, password):
+        """
+        Object instantiation.
+        :param name: This is the name or IP of the Unity
+        :param user: Username to log in with
+        :param password: Password to log in with
+        """
         self.name = name
         self.user = user
         self.password = password
@@ -43,7 +29,7 @@ class Unity:
         Example:
             Instantiate the object:
 
-                > unity = unity('hostname', user, password)
+                > unity = Unity('hostname', user, password)
 
             Login to the API:
 
@@ -76,11 +62,13 @@ class Unity:
         Examples:
             > unity.connect()
 
+        This will return the following properties from the query we have
+        to use to log in (might as well, right?):
 
-        :returns
-            If the connection is successful, it will set the 'session' property
-            of the Unity object to the requests.session object we used to login
-            so we can use the same session for all subsequent operations.
+        Name
+        Platform
+        Model
+        Serial Number
         """
         if self.session is not None:
             print('A session already exists for this object')
@@ -101,7 +89,6 @@ class Unity:
                 'fields': 'name,platform,model,serialNumber'
             }
             login = session.get(login_uri, verify=False, params=parameters)
-            # print(login.json())
             token = login.headers.get('EMC-CSRF-TOKEN')
             session.headers.update({'EMC-CSRF-TOKEN': token})
             self.session = session
@@ -124,7 +111,6 @@ class Unity:
         if type(self.session) is requests.sessions.Session:
             logout_uri = 'https://%s/api/types/loginSessionInfo/action/logout' % self.name
             self.session.post(logout_uri, verify=False)
-            # Reset the session to None after logout occurs.
             self.session = None
             self.storage = None
         else:
@@ -173,10 +159,14 @@ class Unity:
 
     def create(self, resource, *args, timeout=None, **kwargs):
         """
+        This function converts a python object to json and posts it to the
+        right endpoint.  This function will work only if a class for the resource
+        is defined in the classes.py file.  It will look up the required class
+        and instantiate it with the arguments (from *args and **kwargs).
         @todo need to support async requests
-        :param resource:
-        :param payload:
-        :return:
+        :param resource: name of the resource to create
+        :param timeout: timeout value.  Set to 0 for asynchronous requests
+        :return: ID of the resource created, if successful
         """
         class_name = getattr(classes, resource)
         if not class_name:
@@ -247,118 +237,6 @@ class Unity:
         response = self.session.get(endpoint, params=kwargs)
         return response.json()
 
-    def new_nasServer(self, name, homeSP, poolId, tenantId=None, **kwargs):
-        """
-        :param name: Name of the NAS Server to create
-        :param homeSP: ID of the SP (spa, spb) to create the NAS Server on
-        :param poolId: ID of the storage pool to create the NAS Server in
-        :param tenantId:  ID of the tenant to create the NAS Server in.  This
-                        argument is optional, but requires a dictionary.
-
-                        This enables you to specify the tenant ID like this:
-
-                        u.new_nasServer(name, homeSP, poolId, tenantId=<id>)
-
-                        Instead of this:
-
-                        u.new_nasServer(name, homeSP, poolId, tenant={'id': <id>})
-        :param kwargs: All additional parameters are named, and optional.
-                        Review the API documentation for information on the
-                        additional properties accepted.
-        :return: ID of the NAS Server that is created:
-
-                    content': {u'id': u'nas_3'}
-        """
-        res = 'nasServer'
-        data = {
-            'name': name,
-            'homeSP': {
-                'id': homeSP
-            },
-            'pool': {
-                'id': poolId
-            }
-        }
-        if tenantId is not None:
-            tenant = {
-                'tenant': {
-                    'id': tenantId
-                }
-            }
-            data.update(tenant)
-        if kwargs:
-            data.update(kwargs)
-        return self._create_instance(res, payload=data)
-
-    def new_filesystem(self, name, nasServer, size, poolId, **kwargs):
-        """
-        :param name: Name of the filesystem to create
-        :param nasServer: Name of the NAS Server to create the filesystem on
-        :param size: Size of the filesystem.
-                    Specify size in gigabytes like so:  100G or 100.2G
-                        Not sure why you'd specify a float here, but you do you
-                    Specify size in terabytes like so:  1T or 1.2T
-
-                    Floating points will work, but will be converted to bytes
-                    and rounded down.
-
-        :param poolId: ID of the storage pool to create the filesystem on
-        :param kwargs: All other optional parameters
-        :return: ID of the filesystem created
-        """
-        res = 'storageResource'
-        act = 'createFilesystem'
-        fs = classes.StorageResourceFilesystem(name, poolId, nasServer, size, **kwargs)
-        data = fs.jsonify
-        print(data)
-        return self._instance_action(res, act, payload=data)
-
-    def new_fileDNSServer(self, nasServer, domain, addresses, **kwargs):
-        """
-        :param nasServer: ID of the NAS Server to configure DNS
-        :param domain: Name of the domain
-        :param addresses: Address list (prioritized)
-        :return: ID of the fileDNSServer instance
-        @todo need to test this function
-        """
-        res = 'fileDNSServer'
-        address_list = addresses.split(',')
-        data = {
-            'nasServer': {
-                'id': nasServer
-            },
-            'domain': domain,
-            'addresses': address_list
-        }
-        if kwargs:
-            data.update(kwargs)
-        return self._create_instance(res, payload=data)
-
-    def new_fileInterface(self, nasServer, ipPort, ipAddress, netmask, gateway, **kwargs):
-        """
-        :param nasServer: ID of the NAS Server to create the interface on
-        :param ipPort: The ethernet port on which to create the interface
-        :param ipAddress: IP address of the interface
-        :param netmask: Netmask for the interface
-        :param gateway: Default gateway of the interface
-        :return: ID of the interface created
-        """
-        res = 'fileInterface'
-        data = {
-            'nasServer': {
-                'id': nasServer
-            },
-            'ipPort': {
-                'id': ipPort
-            },
-            'ipAddress': ipAddress,
-            'netmask': netmask,
-            'gateway': gateway
-        }
-        if kwargs:
-            data.update(kwargs)
-        return self._create_instance(res, payload=data)
-
 
 class Storage:
     def __init__(self, name, session):
@@ -419,7 +297,6 @@ class Storage:
 
     def modify(self, resource, id=None, name=None, timeout=None, **kwargs):
         """
-
         :param resource:
         :param id:
         :param name:
@@ -431,10 +308,12 @@ class Storage:
             return
         elif name:
             action = 'modify{}ByName'.format(resource)
-            endpoint = 'https://{}/{}/{}/{}'.format(self.name, 'api/instances/storageResource', 'name:{}'.format(name), 'action/{}'.format(action))
+            endpoint = 'https://{}/{}/{}/{}'.format(self.name, 'api/instances/storageResource', 'name:{}'.format(name),
+                                                    'action/{}'.format(action))
         elif id:
             action = 'modify{}'.format(resource)
-            endpoint = 'https://{}/{}/{}/{}'.format(self.name, 'api/instances/storageResource', id, 'action/{}'.format(action))
+            endpoint = 'https://{}/{}/{}/{}'.format(self.name, 'api/instances/storageResource', id,
+                                                    'action/{}'.format(action))
         else:
             print('No instance name or ID given')
             return

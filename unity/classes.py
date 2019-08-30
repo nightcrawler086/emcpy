@@ -149,5 +149,8 @@ class nfsServer:
         self.__dict__.update(kwargs)
 
 
-
-
+class fileKeberosServer:
+    def __init__(self, nasServerId, realm, addresses, **kwargs):
+        self.nasServer = IdObject(nasServerId)
+        self.realm = realm
+        self.addresses = addresses
