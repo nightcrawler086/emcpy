@@ -205,6 +205,7 @@ class vmwareNasPEServer:
         else:
             self.fileInterfaces = fileInterfaces.split(',')
 
+
 class fsParameters(object):
     def __init__(self, size, **kwargs):
         if size[-1] is 'G':
@@ -266,7 +267,6 @@ class host:
 
 class hostContainer:
     """
-    @todo - Incomplete
     """
     def __init__(self, serviceType, targetName, targetAddress, username, password, **kwargs):
         vasa_params = {'localUsername', 'localPassword'}
@@ -276,11 +276,35 @@ class hostContainer:
         self.username = username
         self.password = password
         for k, v in kwargs.items():
-            if k is in vasa_params:
+            if k in vasa_params:
+                if not hasattr(self, 'vasaProviderParameters'):
+                    self.vasaProviderParameters = OptObject()
+                self.vasaProviderParameters.__setattr__(k, v)
+            else:
+                self.__setattr__(k, v)
+
+
+class hostIPPort:
+    def __init__(self, hostId, address, **kwargs):
+        self.host = IdObject(hostId)
+        self.address = address
         self.__dict__.update(kwargs)
 
 
-class
+class hostInitiator:
+    def __init__(self, hostId, initiatorType, initiatorWWNorIqn, **kwargs):
+        self.host = IdObject(hostId)
+        self.initiatorType = initiatorType
+        self.initiatorWWNorIqn = initiatorWWNorIqn
+        self.__dict__.update(kwargs)
+
+
+class nfsShare:
+    def __init__(self, snapId, path, name, **kwargs):
+        self.snap = IdObject(snapId)
+        self.path = path
+        self.name = name
+
 
 
 class Filesystem:
