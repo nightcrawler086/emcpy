@@ -301,11 +301,34 @@ class hostInitiator:
 
 class nfsShare:
     def __init__(self, snapId, path, name, **kwargs):
+        list_params = {'noAccessHosts', 'readOnlyHosts', 'readWriteHosts', 'readOnlyRootAccessHosts', 'rootAccessHosts'}
         self.snap = IdObject(snapId)
         self.path = path
         self.name = name
+        for k, v in kwargs.items():
+            if k in list_params:
+                if type(v) == list:
+                    self.__setattr__(k, v)
+                else:
+                    self.__setattr__(k, v.split(','))
+            else:
+                self.__setattr__(k, v)
 
 
+class remoteSystem:
+    def __init__(self, managementAddress, **kwargs):
+        self.managementAddress = managementAddress
+        self.__dict__.update(kwargs)
+
+
+# Managing storage
+
+
+class capabilityProfile:
+    def __init__(self, name, pool, **kwargs):
+        self.name = name
+        self.pool = pool
+        self.__dict__.update(kwargs)
 
 class Filesystem:
     def __init__(self, name, poolId, nasServerId, size, **kwargs):
