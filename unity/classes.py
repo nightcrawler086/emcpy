@@ -45,13 +45,10 @@ class cifsServer:
 
 
 class fileDNSServer:
-    def __init__(self, nasServerId, domain, addrList):
+    def __init__(self, nasServerId, domain, addrList: list):
         self.nasServer = IdObject(nasServerId)
         self.domain = domain
-        if type(addrList) == list:
-            self.addresses = addrList
-        else:
-            self.addresses = addrList.split(',')
+        self.addresses = addrList
 
 
 class fileInterface:
@@ -70,7 +67,7 @@ class fileKeberosServer:
 
 
 class fileLDAPServer:
-    def __init__(self, nasServerId, authenticationType, authority, serverAddresses=None, **kwargs):
+    def __init__(self, nasServerId, authenticationType, authority, serverAddresses: list, **kwargs):
         """
 
         :param nasServerId: ID of the NAS Server on which to create
@@ -85,10 +82,7 @@ class fileLDAPServer:
         self.nasServer = IdObject(nasServerId)
         self.authenticationType = authenticationType
         self.authority = authority
-        if type(serverAddresses) == list:
-            self.serverAddresses = serverAddresses
-        else:
-            self.serverAddresses = serverAddresses.split(',')
+        self.serverAddresses = serverAddresses
         self.__dict__.update(kwargs)
 
 
@@ -99,22 +93,16 @@ class fileNDMPServer:
 
 
 class fileNISServer:
-    def __init__(self, nasServerId, domain, addresses):
+    def __init__(self, nasServerId, domain, addresses: list):
         self.nasServer = IdObject(nasServerId)
         self.domain = domain
-        if type(addresses) == list:
-            self.addresses = addresses
-        else:
-            self.addresses = addresses.split(',')
+        self.addresses = addresses
 
 
 class fsnPort:
-    def __init__(self, primaryPort, secondaryPorts, **kwargs):
+    def __init__(self, primaryPort, secondaryPorts: list, **kwargs):
         self.primaryPort = IdObject(primaryPort)
-        if type(secondaryPorts) == list:
-            self.secondaryPorts = secondaryPorts
-        else:
-            self.secondaryPorts = secondaryPorts.split(',')
+        self.secondaryPorts = secondaryPorts
         self.__dict__.update(kwargs)
 
 
@@ -125,21 +113,15 @@ class ftpServer:
 
 
 class iscsiPortal:
-    def __init__(self, ethernetPortId, ipAddress, **kwargs):
+    def __init__(self, ethernetPortId, ipAddress: list, **kwargs):
         self.ethernetPort = IdObject(ethernetPortId)
-        if type(ipAddress) == list:
-            self.ipAddress = ipAddress
-        else:
-            self.ipAddress = ipAddress.split(',')
+        self.ipAddress = ipAddress
         self.__dict__.update(kwargs)
 
 
 class linkAggregation:
-    def __init__(self, ports, **kwargs):
-        if type(ports) == list:
-            self.ports = ports
-        else:
-            self.ports = ports.split(',')
+    def __init__(self, ports: list, **kwargs):
+        self.ports = ports
         self.__dict__.update(kwargs)
 
 
@@ -188,22 +170,16 @@ class smtpServer:
 
 
 class tenant:
-    def __init__(self, name, vlans, **kwargs):
+    def __init__(self, name, vlans: list, **kwargs):
         self.name = name
-        if type(vlans) == list:
-            self.vlans = vlans
-        else:
-            self.vlans = vlans.split(',')
+        self.vlans = vlans
         self.__dict__.update(kwargs)
 
 
 class vmwareNasPEServer:
-    def __init__(self, nasServerId, fileInterfaces):
+    def __init__(self, nasServerId, fileInterfaces: list):
         self.nasServer = IdObject(nasServerId)
-        if type(fileInterfaces) == list:
-            self.fileInterfaces = fileInterfaces
-        else:
-            self.fileInterfaces = fileInterfaces.split(',')
+        self.fileInterfaces = fileInterfaces
 
 
 class fsParameters(object):
@@ -238,12 +214,9 @@ class alertEmailConfig:
 
 
 class job:
-    def __init__(self, description, tasks, **kwargs):
+    def __init__(self, description, tasks: list, **kwargs):
         self.description = description
-        if type(taks) == list:
-            self.tasks = tasks
-        else:
-            self.tasks = tasks.split(',')
+        self.tasks = tasks
         self.__dict__.update(kwargs)
 
 
@@ -301,18 +274,10 @@ class hostInitiator:
 
 class nfsShare:
     def __init__(self, snapId, path, name, **kwargs):
-        list_params = {'noAccessHosts', 'readOnlyHosts', 'readWriteHosts', 'readOnlyRootAccessHosts', 'rootAccessHosts'}
         self.snap = IdObject(snapId)
         self.path = path
         self.name = name
-        for k, v in kwargs.items():
-            if k in list_params:
-                if type(v) == list:
-                    self.__setattr__(k, v)
-                else:
-                    self.__setattr__(k, v.split(','))
-            else:
-                self.__setattr__(k, v)
+        self.__dict__.update(kwargs)
 
 
 class remoteSystem:
@@ -329,6 +294,35 @@ class capabilityProfile:
         self.name = name
         self.pool = pool
         self.__dict__.update(kwargs)
+
+
+class dhsmConnection:
+    def __init__(self, secondaryUrl, filesystemId, **kwargs):
+        self.secondaryUrl = secondaryUrl
+        self.filesystemId = filesystemId
+        self.__dict__.update(kwargs)
+
+
+class dhsmServer:
+    def __init__(self, nasServerId, **kwargs):
+        self.nasServer = IdObject(nasServerId)
+        self.__dict__.update(kwargs)
+
+
+class fileEventsPool:
+    def __init__(self, eventsPublisherId, name, servers: list, **kwargs):
+        self.eventsPublisher = IdObject(eventsPublisherId)
+        self.name = name
+        self.servers = servers
+        self.__dict__.update(kwargs)
+
+
+class moveSession:
+    def __init__(self, sourceStorageResourceId, destinationPoolId, **kwargs):
+        self.sourceStorageResource = IdObject(sourceStorageResourceId)
+        self.destinationPool = IdObject(destinationPoolId)
+        self.__dict__.update(kwargs)
+
 
 class Filesystem:
     def __init__(self, name, poolId, nasServerId, size, **kwargs):
@@ -368,19 +362,3 @@ class Filesystem:
                     self.cifsFsParameters.__setattr__(k, v)
             else:
                 self.__setattr__(k, v)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
