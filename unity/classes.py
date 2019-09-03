@@ -324,6 +324,27 @@ class moveSession:
         self.__dict__.update(kwargs)
 
 
+class pool:
+    def __init__(self, name, **kwargs):
+        self.name = name
+        self.__dict__.update(kwargs)
+
+
+class treeQuota:
+    def __init__(self, filesystemId, path, **kwargs):
+        self.filesystem = IdObject(filesystemId)
+        self.path = path
+        self.__dict__.update(kwargs)
+
+
+## Storage resources (LUN, ConsistencyGroup, VMwareLun, VMwareNFS, Filesystem, VVol
+
+class userQuota:
+    def __init__(self, **kwargs):
+        self.__dict__.update(kwargs)
+
+
+
 class Filesystem:
     def __init__(self, name, poolId, nasServerId, size, **kwargs):
         self.name = name
