@@ -182,17 +182,6 @@ class vmwareNasPEServer:
         self.fileInterfaces = fileInterfaces
 
 
-class fsParameters(object):
-    def __init__(self, size, **kwargs):
-        if size[-1] is 'G':
-            size_bytes = int(float(size[:-1]) * 1073741824)
-        elif size[-1] is 'T':
-            size_bytes = int(float(size[:-1]) * 1099511627776)
-        else:
-            print('Size must be specified like 1G (gigabytes) or 1T (terabytes)')
-            return
-        self.size = size_bytes
-        self.__dict__.update(kwargs)
 
 
 # Managing events and alerts
@@ -339,10 +328,47 @@ class treeQuota:
 
 ## Storage resources (LUN, ConsistencyGroup, VMwareLun, VMwareNFS, Filesystem, VVol
 
-class userQuota:
-    def __init__(self, **kwargs):
-        self.__dict__.update(kwargs)
+class lunParameters:
+    """
+    @todo - Not complete yet
+    """
+    def __init__(self, size, **kwargs):
+        if size[-1] is 'G':
+            size_bytes = int(float(size[:-1]) * 1073741824)
+        elif size[-1] is 'T':
+            size_bytes = int(float(size[:-1]) * 1099511627776)
+        else:
+            print('Size must be specified like 1G (gigabytes) or 1T (terabytes)')
+            return
+        self.size = size_bytes
 
+
+class Lun:
+    """
+    @todo - incomplete
+    """
+    def __init__(self, name, poolId, size, **kwargs):
+        self.name = name
+        lun_params = {'isThinEnabled', 'isDataReductionEnabled', 'isAdvancedDedupEnabled',
+                      'defaultNode', 'hostAccess'}
+        rep_params = {'isReplicationDestination'}
+        snap_params = {'snapSchedule', 'isSnapSchedulePaused'}
+        fastvp_params = {'tieringPolicy'}
+        self.lunParameters = lunParameters(size)
+        self.lunParameters.pool = IdObject(poolId)
+
+
+class fsParameters(object):
+    def __init__(self, size, **kwargs):
+        if size[-1] is 'G':
+            size_bytes = int(float(size[:-1]) * 1073741824)
+        elif size[-1] is 'T':
+            size_bytes = int(float(size[:-1]) * 1099511627776)
+        else:
+            print('Size must be specified like 1G (gigabytes) or 1T (terabytes)')
+            return
+        self.size = size_bytes
+        self.__dict__.update(kwargs)
 
 
 class Filesystem:
@@ -383,3 +409,63 @@ class Filesystem:
                     self.cifsFsParameters.__setattr__(k, v)
             else:
                 self.__setattr__(k, v)
+
+
+class userQuota:
+    def __init__(self, **kwargs):
+        self.__dict__.update(kwargs)
+
+
+# Managing the environment
+
+class kmipServer:
+    def __init__(self, addresses: list, port, timeout, username, password):
+        self.addresses = addresses
+        self.port = port
+        self.timeout = timeout
+        self.username = username
+        self.password = password
+
+
+# Managing the system
+
+class remoteSyslog:
+    def __init__(self, address, **kwargs):
+        self.address = address
+        self.__dict__.update(kwargs)
+
+
+## Under Managing the environment, the following resources need classes:
+##      importSession, softwareUpgradeSession, upgradeSession
+
+# Protecting data
+
+class ldapServer:
+    def __init__(self, bindDN, bindPassword, userSearchPath, groupSearchPath, **kwargs):
+        self.bindDN = bindDN
+        self.bindPassword = bindPassword
+        self.userSearchPath = userSearchPath
+        self.groupSearchPath = groupSearchPath
+        self.__dict__.update(kwargs)
+
+
+class replicationInterface:
+    def __init__(self, sp, ipPort, ipAddress):
+        self.sp = IdObject(sp)
+        self.ipPort = IdObject(ipPort)
+        self.ipAddress = ipAddress
+        self.__dict__.update(kwargs)
+
+
+class replicationSession:
+    def __init__(self, srcResourceId, dstResourceId, maxTimeOutOfSync, hourlySnapReplicationPolicy: dict = None,
+                 dailySnapReplicationPolicy: dict = None, **kwargs):
+        id_objects = {'srcSPAInterface', 'srcSPBInterface', 'dstSPAInterface', 'dstSPBInterface'}
+        self.srcResourceId = srcResourceId
+        self.dstResourceId = dstResourceId
+        self.maxTimeOutOfSync = maxTimeOutOfSync
+        for k, v in kwargs.items():
+            if k in id_objects:
+                self.__setattr__(k, IdObject(v))
+
+

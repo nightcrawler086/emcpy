@@ -11,20 +11,25 @@ class Unity:
         :param name: This is the name or IP of the Unity
         :param user: Username to log in with
         :param password: Password to log in with
+
+        There are some other properties that I'm setting as empty for now.
+        They will be used to for sub-classes (not inherited) after the
+        connect() method is executed.  In those sub-classes will be functions
+        specific to the resource.
+
         """
         self.name = name
         self.user = user
         self.password = password
         self.session = None
-        self.storage = None
+        self.storageResource = None
 
     def __getattr__(self, attr):
         """
         This is a handy little function that can be used as a discovery
         mechanism.  It allows easy exploration of the objects in the
         Unity REST API.  This is designed to be used interactively.  Use
-        the specific functions for the resource you're working with for
-        real work.
+        the 'get' function for real work.
 
         Example:
             Instantiate the object:
@@ -43,9 +48,6 @@ class Unity:
         only returns the ID attribute by default, unless the GET request
         specifies more properties.  This function would be more useful if
         all properties were returned for each resource.
-
-        @todo -> Come up with a way to return all properties of each object
-                explored with this function
         """
         if attr in self.__dict__:
             return self.__dict__[attr]
@@ -55,20 +57,24 @@ class Unity:
             else:
                 return Unity.get(self, attr)
 
-    def connect(self):
+    def connect(self, quiet: bool = 'false'):
         """
         Method to connect to the Unity REST API.
 
         Examples:
+
             > unity.connect()
 
         This will return the following properties from the query we have
-        to use to log in (might as well, right?):
+        to use to log in:
 
         Name
         Platform
         Model
         Serial Number
+
+        If the 'quiet' parameter is set to 'true', the connect method will
+        not return anything (might be useful in a script).
         """
         if self.session is not None:
             print('A session already exists for this object')
@@ -92,8 +98,9 @@ class Unity:
             token = login.headers.get('EMC-CSRF-TOKEN')
             session.headers.update({'EMC-CSRF-TOKEN': token})
             self.session = session
-            self.storage = Storage(self.name, self.session)
-            return login.json()
+            self.storageResource = storageResource(self.name, self.session)
+            if quiet == 'false':
+                return login.json()
 
     def disconnect(self):
         """
@@ -112,7 +119,7 @@ class Unity:
             logout_uri = 'https://%s/api/types/loginSessionInfo/action/logout' % self.name
             self.session.post(logout_uri, verify=False)
             self.session = None
-            self.storage = None
+            self.storageResource = None
         else:
             print('There is no active session to disconnect for this object')
             return
@@ -238,7 +245,7 @@ class Unity:
         return response.json()
 
 
-class Storage:
+class storageResource:
     def __init__(self, name, session):
         self.name = name
         self.session = session
