@@ -244,6 +244,33 @@ class Unity:
         response = self.session.get(endpoint, params=kwargs)
         return response.json()
 
+    def download(self, nasServerId: str, fileType: int):
+        """
+
+        :param nasServerId: NAS Server to download configuration file from
+        :param fileType: Type of configuration to download:
+                    1 - Ldap_Configuration (LDAP schema file)
+                    2 - Ldap_CA_Certificate
+                    3 - Username_Mappings (ntxmap.conf?)
+        :return: raw file in response body
+        """
+        endpoint = 'https://{}/{}/{}/{}/{}'.format(self.name, 'download', fileType, 'nasServer', nasServerId)
+        print(endpoint)
+        response = self.session.get(endpoint, stream=True)
+        return response.content
+
+    def upload(self, nasServerId: str, fileType: int, file: object):
+        """
+        @todo doesn't work yet
+        :param nasServerId:
+        :param fileType:
+        :param file:
+        :return:
+        """
+        endpoint = 'https://{}/{}/{}/{}/{}'.format(self.name, 'upload', fileType, 'nasServer', nasServerId)
+        response = self.session.post(endpoint, files=file)
+        return response
+
 
 class storageResource:
     def __init__(self, name, session):
