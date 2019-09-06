@@ -57,7 +57,7 @@ class Unity:
             else:
                 return Unity.get(self, attr)
 
-    def connect(self, quiet: bool = 'false'):
+    def connect(self, quiet: bool = False):
         """
         Method to connect to the Unity REST API.
 
@@ -99,7 +99,7 @@ class Unity:
             session.headers.update({'EMC-CSRF-TOKEN': token})
             self.session = session
             self.storageResource = storageResource(self.name, self.session)
-            if quiet == 'false':
+            if quiet is False:
                 return login.json()
 
     def disconnect(self):
@@ -116,7 +116,7 @@ class Unity:
 
         """
         if type(self.session) is requests.sessions.Session:
-            logout_uri = 'https://%s/api/types/loginSessionInfo/action/logout' % self.name
+            logout_uri = 'https://{}/api/types/loginSessionInfo/action/logout'.format(self.name)
             self.session.post(logout_uri, verify=False)
             self.session = None
             self.storageResource = None
@@ -139,23 +139,25 @@ class Unity:
         return json.loads(data, object_hook=Unity.json_object_hook)
     """
 
-    def delete(self, resource, name=None, id=None, timeout=None, **kwargs):
+    def delete(self, resource, rname=None, rid=None, timeout=None, **kwargs):
         """
 
-        :param resource:
-        :param name:
-        :param id:
-        :param timeout:
-        :param kwargs:
-        :return:
+        :param resource: Type of resource to delete.  Must match the name (and case)
+                        of the resource in the API
+        :param rname: "Resource Name".  Name of the resource to delete.
+        :param rid: "Resource ID".  ID of the resource to delete
+        :param timeout: Operation timeout.  For asynchronous requests (set to 0)
+        :param kwargs:  Some delete operations take some additional options
+                        like forcefully deleting snaps when deleting a storage resource.
+        :return: Response code 204/202 (async)
         """
-        if name and id:
+        if rname and id:
             print('You cannot specify a name and an ID.')
             return
-        elif name:
-            endpoint = 'https://{}/{}/{}/{}'.format(self.name, 'api/instances', resource, 'name:{}'.format(name))
-        elif id:
-            endpoint = 'https://{}/{}/{}/{}'.format(self.name, 'api/instances', resource, id)
+        elif rname:
+            endpoint = 'https://{}/{}/{}/{}'.format(self.name, 'api/instances', resource, 'name:{}'.format(rname))
+        elif rid:
+            endpoint = 'https://{}/{}/{}/{}'.format(self.name, 'api/instances', resource, rid)
         else:
             print('No instance to given to delete.')
             return
@@ -178,7 +180,6 @@ class Unity:
         class_name = getattr(classes, resource)
         if not class_name:
             print('Invalid resource name or class does not exist.')
-        print(args)
         obj = class_name(*args, **kwargs)
         body = Unity.jsonify(obj)
         timeout = timeout or {}
@@ -186,27 +187,28 @@ class Unity:
         response = self.session.post(endpoint, data=body, params=timeout)
         return response.json()
 
-    def modify(self, resource, iname=None, id=None, timeout=None, **kwargs):
+    def modify(self, resource, rname=None, rid=None, timeout=None, **kwargs):
         """
         :param resource:
-        :param iname:
-        :param id:
+        :param rname:
+        :param rid:
         :param timeout:
         :return:
         """
-        if id:
-            endpoint = 'https://{}/{}/{}/{}/{}'.format(self.name, 'api/instances', resource, id, 'action/modify')
-        elif iname:
-            endpoint = 'https://{}/{}/{}/{}/{}'.format(self.name, 'api/instances', resource, 'name:{}'.format(iname),
+        if rid:
+            endpoint = 'https://{}/{}/{}/{}/{}'.format(self.name, 'api/instances', resource, rid, 'action/modify')
+        elif rname:
+            endpoint = 'https://{}/{}/{}/{}/{}'.format(self.name, 'api/instances', resource, 'name:{}'.format(rname),
                                                        'action/modify')
         else:
+            print('No resource name or ID specified.')
             return
         timeout = timeout or {}
         body = json.dumps(kwargs)
         response = self.session.post(endpoint, params=timeout, data=body)
         return response
 
-    def get(self, resource, name=None, id=None, **kwargs):
+    def get(self, resource, rname=None, rid=None, **kwargs):
         """
         One query function to rule them all.
 
@@ -232,13 +234,13 @@ class Unity:
                     other fields are specified, and they are available via
                     this resource, they will be returned.
         """
-        if name and id:
+        if rname and rid:
             print('You cannot specify both a name and an ID.')
             return
-        elif name:
-            endpoint = 'https://{}/{}/{}/{}'.format(self.name, 'api/instances', resource, 'name:{}'.format(name))
-        elif id:
-            endpoint = 'https://{}/{}/{}/{}'.format(self.name, 'api/instances', resource, id)
+        elif rname:
+            endpoint = 'https://{}/{}/{}/{}'.format(self.name, 'api/instances', resource, 'name:{}'.format(rname))
+        elif rid:
+            endpoint = 'https://{}/{}/{}/{}'.format(self.name, 'api/instances', resource, rid)
         else:
             endpoint = 'https://{}/{}/{}/{}'.format(self.name, 'api/types', resource, 'instances')
         response = self.session.get(endpoint, params=kwargs)
@@ -282,14 +284,14 @@ class storageResource:
         json_data = json.dumps(data.__dict__, default=lambda o: o.__dict__, indent=4)
         return json_data
 
-    def get(self, id=None, name=None, **kwargs):
-        if name and id:
+    def get(self, rid=None, rname=None, **kwargs):
+        if rname and rid:
             print('You cannot specify a name and an ID.')
             return
-        elif id:
-            endpoint = 'https://{}/{}/{}'.format(self.name, 'api/instances/storageResource', id)
-        elif name:
-            endpoint = 'https://{}/{}/{}'.format(self.name, 'api/instances/storageResource', 'name:{}'.format(name))
+        elif rid:
+            endpoint = 'https://{}/{}/{}'.format(self.name, 'api/instances/storageResource', rid)
+        elif rname:
+            endpoint = 'https://{}/{}/{}'.format(self.name, 'api/instances/storageResource', 'name:{}'.format(rname))
         else:
             endpoint = 'https://{}/{}'.format(self.name, 'api/types/storageResource/instances')
         response = self.session.get(endpoint, params=kwargs)
@@ -314,14 +316,14 @@ class storageResource:
         response = self.session.post(endpoint, params=timeout, data=body)
         return response.json()
 
-    def delete(self, id=None, name=None, timeout=None, **kwargs):
-        if name and id:
+    def delete(self, rid=None, rname=None, timeout=None, **kwargs):
+        if rname and rid:
             print('Cannot specify a name and an ID.')
             return
-        elif name:
-            endpoint = 'https://{}/{}/{}'.format(self.name, 'api/instances/storageResource', 'name:{}'.format(name))
-        elif id:
-            endpoint = 'https://{}/{}/{}'.format(self.name, 'api/instances/storageResource', id)
+        elif rname:
+            endpoint = 'https://{}/{}/{}'.format(self.name, 'api/instances/storageResource', 'name:{}'.format(rname))
+        elif rid:
+            endpoint = 'https://{}/{}/{}'.format(self.name, 'api/instances/storageResource', rid)
         else:
             print('No resource specified.')
             return
@@ -329,24 +331,24 @@ class storageResource:
         response = self.session.delete(endpoint, params=timeout, data=body)
         return response
 
-    def modify(self, resource, id=None, name=None, timeout=None, **kwargs):
+    def modify(self, resource, rid=None, rname=None, timeout=None, **kwargs):
         """
         :param resource:
-        :param id:
-        :param name:
+        :param rid:
+        :param rname:
         :param payload:
         :return:
         """
-        if name and id:
+        if rname and rid:
             print('You cannot specify a name and an ID.')
             return
-        elif name:
+        elif rname:
             action = 'modify{}ByName'.format(resource)
-            endpoint = 'https://{}/{}/{}/{}'.format(self.name, 'api/instances/storageResource', 'name:{}'.format(name),
+            endpoint = 'https://{}/{}/{}/{}'.format(self.name, 'api/instances/storageResource', 'name:{}'.format(rname),
                                                     'action/{}'.format(action))
         elif id:
             action = 'modify{}'.format(resource)
-            endpoint = 'https://{}/{}/{}/{}'.format(self.name, 'api/instances/storageResource', id,
+            endpoint = 'https://{}/{}/{}/{}'.format(self.name, 'api/instances/storageResource', rid,
                                                     'action/{}'.format(action))
         else:
             print('No instance name or ID given')
