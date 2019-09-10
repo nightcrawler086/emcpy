@@ -47,6 +47,8 @@ current_prod_frame = None
 current_cob_frame = None
 sorted_rows = sorted(rows, key=lambda i: [i.prod_frame, i.cob_frame])
 
+# The outer loop is where we can check frame-level conditions
+# Like prod/cob pool utilization
 for x in sorted_rows:
     if x.prod_frame == current_prod_frame and x.cob_frame == current_cob_frame:
         continue
@@ -54,6 +56,11 @@ for x in sorted_rows:
         current_prod_frame = x.prod_frame
         current_cob_frame = x.cob_frame
         print('Prod: {} -> Cob: {}'.format(x.prod_frame, x.cob_frame))
+
+    # This inner loop would be for all NAS Server operations
+    nas_servers = [[x.prod_frame, x.prod_nas_server, x.prod_ip] for r in sorted_rows if x.prod_frame == current_prod_frame and x.cob_frame == current_cob_frame]
+    for n in nas_servers:
+        print('Frame: {} -> NAS Server: {} -> IP: {}'.format(n[0], n[1], n[2]))
 # Unique list of source/target frames
 
 
