@@ -1,5 +1,7 @@
 import csv
 from collections import namedtuple
+import datetime
+import getpass
 import logging
 from optparse import OptionParser
 import unity
@@ -13,7 +15,7 @@ parser.add_option("-f", "--input-file",
                   dest="input_file",
                   default=False,
                   help="Path to SOD Sheet saved as CSV")
-
+# This is essentially a filter for the file
 parser.add_option("-s", "--sltn-number",
                   action="store",
                   dest="sltn_num",
@@ -22,13 +24,8 @@ parser.add_option("-s", "--sltn-number",
 
 # Parse the arguments
 (opts, args) = parser.parse_args()
-
-"""
-# Import csv file to list of dicts
-with open(opts.input_file) as f:
-    sod_dict = [{k: str(v) for k, v in row.items()}
-                for row in csv.DictReader(f, skipinitialspace=True)]
-"""
+# Get current user
+current_user = getpass.getuser()
 # Define named tuple 'template' for each row in the input file.
 # I'm using different names for the columns, since the input file
 # contains too many spaces/special characters for me ;)
@@ -38,50 +35,52 @@ row = namedtuple('row', ('status', 'prov_tc', 'prod_frame', 'prod_sp', 'prod_poo
                          'cob_mask', 'cob_broadcast', 'cob_qip', 'qtree', 'bkup_srvr', 'bkup_ip', 'bkup_mask',
                          'bkup_gw', 'sec_style', 'ad_group', 'netgroups'))
 
+# This reads the input file, skips the first row and
+# creates a tuple based on the 'template' above.  Then
+# we add that tuple to a list
 with open(opts.input_file, 'r') as f:
     r = csv.reader(f, delimiter=',')
     next(r)
     rows = [row(*l) for l in r]
 
-current_prod_frame = None
-current_cob_frame = None
-sorted_rows = sorted(rows, key=lambda i: [i.prod_frame, i.cob_frame])
 
-# The outer loop is where we can check frame-level conditions
-# Like prod/cob pool utilization
-for x in sorted_rows:
-    if x.prod_frame == current_prod_frame and x.cob_frame == current_cob_frame:
-        continue
-    else:
-        current_prod_frame = x.prod_frame
-        current_cob_frame = x.cob_frame
-        print('Prod: {} -> Cob: {}'.format(x.prod_frame, x.cob_frame))
-
-    # This inner loop would be for all NAS Server operations
-    nas_servers = [[x.prod_frame, x.prod_nas_server, x.prod_ip] for r in sorted_rows if x.prod_frame == current_prod_frame and x.cob_frame == current_cob_frame]
-    for n in nas_servers:
-        print('Frame: {} -> NAS Server: {} -> IP: {}'.format(n[0], n[1], n[2]))
-# Unique list of source/target frames
+unique_frame_pairs = set()
+unique_frame_list = []
+print('Begin {}'.format(datetime.datetime.now()))
+for i in rows:
+    if (i.prod_frame, i.cob_frame) not in unique_frame_pairs:
+        unique_frame_list.append(i)
+    unique_frame_pairs.add((i.prod_frame, i.cob_frame))
 
 
-"""
-print('Total records in file: {}'.format(len(sod_dict)))
-# Sort sheet by PROD/COB filer pairs
-# sod_dict_sorted = sorted(sod_dict, key=lambda i: (i['Prod Physical Device'], i['COB Physical Device']))
-uniq = [list(y) for x, y in itertools.groupby(sorted(sod_dict, key=lambda x:
-(x['Prod Physical Device'], x['COB Physical Device'])))]
-print('Number of unique records: {}'.format(len(uniq)))
-for x in sod_dict_sorted:
-    print('Prod: {} -> Cob: {}'.format(x['Prod Physical Device'], x['COB Physical Device']))
-    # Do all frame level operations here (pool space, etc)
-    # Get unique list of NAS Servers from the input file (now a dict)
-    #unique_nas_servers = list({v['Prod VDM/EVS / CIFS / NFS server']: v for v in sod_dict}.values())
-    for r in unique_nas_servers:
-        # do all NAS Server operations here
-        # print('{}'.format(r['Prod VDM/EVS / CIFS / NFS server']))
-        key = r['Prod VDM/EVS / CIFS / NFS server']
-        unique_fs = list(filter(lambda d: d['Prod VDM/EVS / CIFS / NFS server'] in key, sod_dict))
-        for fs in unique_fs:
-            # Do all filesystem operations here
-            print(fs['File System'])
-"""
+for fr in unique_frame_list:
+    print('Prod: {} -> Cob: {}'.format(fr.prod_frame, fr.cob_frame))
+    # This is where we do any frame level checks
+    # Maybe source/target pool size, etc
+    #
+    # This is where we create a unique list of NAS servers for the
+    # current prod/cob frame pair
+    uniq_ns = set()
+    uniq_ns_list = []
+    for x in rows:
+        if fr.prod_frame == x.prod_frame and fr.cob_frame == x.cob_frame:
+            if x.prod_nas_server not in uniq_ns:
+                uniq_ns_list.append(x)
+            uniq_ns.add(x.prod_nas_server)
+    for ns in uniq_ns_list:
+        # This is where we do NAS Server level checks/operations
+        #
+        print('NAS Server: {} -> IP: {}'.format(ns.prod_nas_server, ns.prod_ip))
+        # This is where we create a unique list of filesystems for the
+        # current NAS Server
+        uniq_fs = set()
+        uniq_fs_list = []
+        for y in rows:
+            if ns.prod_nas_server == y.prod_nas_server:
+                if y.prod_fs not in uniq_fs:
+                    uniq_fs_list.append(y)
+                uniq_fs.add(y.prod_fs)
+        for fs in uniq_fs_list:
+            # This is where we do Filesystem level checks/operations
+            print('Filesystem: {}'.format(fs.prod_fs))
+
