@@ -4,6 +4,8 @@ import datetime
 import getpass
 import logging
 from optparse import OptionParser
+import os
+import sys
 import time
 import unity
 
@@ -22,13 +24,22 @@ parser.add_option("-s", "--sltn-number",
                   dest="sltn_num",
                   default=None,
                   help="SLTN Number to filter the input file on.")
+# username to connect to the Unity systems
+parser.add_option("-u", "--unity-user",
+                  action="store",
+                  dest="u",
+                  default='admin',
+                  help="Username to log into the Unity API.")
 
+# Prompt for password.
+p = getpass.getpass('Password (one password for all Unity systems): ')
+if not p:
+    print('You must specify a password.')
+    sys.exit()
 # Parse the arguments
 (opts, args) = parser.parse_args()
 # Get current user
 current_user = getpass.getuser()
-print('Hello {}.  Welcome to the NAS Provisioning script for EMC Unity.'.format(current_user))
-time.sleep(7)
 # Define named tuple 'template' for each row in the input file.
 # I'm using different names for the columns, since the input file
 # contains too many spaces/special characters for me ;)
@@ -57,7 +68,7 @@ for i in rows:
 
 # fp = frame pair
 for fp in unique_frame_list:
-    print('Prod: {} -> Cob: {}'.format(fp.prod_frame, fp.cob_frame))
+    # print('Prod: {} -> Cob: {}'.format(fp.prod_frame, fp.cob_frame))
     # This is where we do any frame level checks
     #
     # Checks:
@@ -68,6 +79,13 @@ for fp in unique_frame_list:
     # 5. Sum total all space to be provisioned, the recalculate the space/subscription
     # 6. Warn if it will exceed a default threshold, add a configurable switch to modify threshold
     #
+    prod_frame = unity.Unity(fp.prod_frame, opts.u, p)
+    prod_frame.connect(quiet=True)
+    cob_frame = unity.Unity(fp.cob_frame, opts.u, p)
+    cob_frame.connect(quiet=True)
+    # Evaluate pool space subscription ratio
+    prod_pool = prod_frame.get('pool', rid=0, fields='sizeSubscribed', compact=True)
+    cob_pool = cob_frame.get('pool', rid=0, fields='sizeSubscribed', compact=True)
     # This is where we create a unique list of NAS servers for the
     # current prod/cob frame pair
     uniq_ns = set()
