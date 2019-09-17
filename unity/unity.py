@@ -1,6 +1,6 @@
 import json
 import requests
-# from unity import classes
+from unity import classes
 
 
 class Unity:
@@ -129,16 +129,6 @@ class Unity:
         json_data = json.dumps(data.__dict__, default=lambda o: o.__dict__, indent=4)
         return json_data
 
-    """
-    @staticmethod
-    def json_object_hook(d):
-        return namedtuple('X', d.keys())(*d.values())
-
-    @staticmethod
-    def json2obj(data):
-        return json.loads(data, object_hook=Unity.json_object_hook)
-    """
-
     def delete(self, resource, rname=None, rid=None, timeout=None, **kwargs):
         """
 
@@ -221,6 +211,8 @@ class Unity:
 
         https://<UNITY_HOSTNAME>/apidocs/index.html
 
+        :param rname:
+        :param rid:
         :param resource:  Type of the resource to query
         :param name: Name of the resource to query (optional)
         :param id: Internal ID (rid = Resource ID) to query (optional)
@@ -248,12 +240,19 @@ class Unity:
 
     def download(self, nasServerId: str, fileType: int):
         """
-
         :param nasServerId: NAS Server to download configuration file from
         :param fileType: Type of configuration to download:
-                    1 - Ldap_Configuration (LDAP schema file)
-                    2 - Ldap_CA_Certificate
-                    3 - Username_Mappings (ntxmap.conf?)
+                1 - Ldap_Configuration (LDAP schema file)
+                2 - Ldap_CA_Certificate
+                3 - Username_Mappings
+                4 - Virus_Checker_Configuration
+                5 - Users
+                6 – Groups
+                7 - Hosts
+                8 - Netgroups
+                9 - User_Mapping_Report
+                10 - Kerberos_Key_Table
+                11 - Homedir
         :return: raw file in response body
         """
         endpoint = 'https://{}/{}/{}/{}/{}'.format(self.name, 'download', fileType, 'nasServer', nasServerId)
@@ -261,16 +260,30 @@ class Unity:
         response = self.session.get(endpoint, stream=True)
         return response.content
 
-    def upload(self, nasServerId: str, fileType: int, file: object):
+    def upload(self, nasServerId: str, fileType: int, filePath: str):
         """
-        @todo doesn't work yet
-        :param nasServerId:
-        :param fileType:
-        :param file:
-        :return:
+        :param nasServerId: ID of the NAS Server to upload to
+        :param fileType: Type of configuration file to upload
+                1 - Ldap_Configuration (LDAP schema file)
+                2 - Ldap_CA_Certificate
+                3 - Username_Mappings
+                4 - Virus_Checker_Configuration
+                5 - Users
+                6 – Groups
+                7 - Hosts
+                8 - Netgroups
+                9 - User_Mapping_Report
+                10 - Kerberos_Key_Table
+                11 - Homedir
+        :param filePath: Path to the file to upload.  Will be read as binary
+                        and posted to the specified fileType location
+        :return: Response 200/204 for success
         """
         endpoint = 'https://{}/{}/{}/{}/{}'.format(self.name, 'upload', fileType, 'nasServer', nasServerId)
+        file = {'file': open(filePath, "rb")}
+        del self.session.headers['Content-Type']
         response = self.session.post(endpoint, files=file)
+        self.session.headers.update({'Content-Type': 'application/json'})
         return response
 
 
@@ -300,6 +313,7 @@ class storageResource:
     def create(self, resource, *args, timeout=None, **kwargs):
         """
 
+        :param timeout:
         :param resource:
         :param payload:
         :return:
@@ -332,28 +346,3 @@ class storageResource:
         return response
 
     def modify(self, resource, rid=None, rname=None, timeout=None, **kwargs):
-        """
-        :param resource:
-        :param rid:
-        :param rname:
-        :param payload:
-        :return:
-        """
-        if rname and rid:
-            print('You cannot specify a name and an ID.')
-            return
-        elif rname:
-            action = 'modify{}ByName'.format(resource)
-            endpoint = 'https://{}/{}/{}/{}'.format(self.name, 'api/instances/storageResource', 'name:{}'.format(rname),
-                                                    'action/{}'.format(action))
-        elif id:
-            action = 'modify{}'.format(resource)
-            endpoint = 'https://{}/{}/{}/{}'.format(self.name, 'api/instances/storageResource', rid,
-                                                    'action/{}'.format(action))
-        else:
-            print('No instance name or ID given')
-            return
-        body = json.dumps(kwargs)
-        timeout = timeout or {}
-        response = self.session.post(endpoint, data=body, params=timeout)
-        return response
