@@ -141,41 +141,49 @@ Python Client for EMC NAS (Unity/VNX) Platforms
 | user | x | | | | |
 | x509Certificate | x | | | | |
 
-### Import the module
+### Usage
+
+#### Import the module
 
 `> from unity import unity`
 
-### Define the object
+#### Instantiate the class
 
 `> nas = unity.Unity(hostname, user, password)`
 
-### Log into the REST API
+### Login to the REST API
 
 `> nas.connect()`
 
-### Query a collection (filesystem)
+OR
 
-`> nas.filesystem`
+`> nas.connect(quiet=True)`
 
-If you want to add parameters to the query use the `get` function.
 
-`> nas.get('filesystem', fields='name,id', compact='true')`
+### Queries
 
-### Query an instance (filesystem)
+Most queries can be done through the `get` function.
 
-By name:
+#### Collection Query
 
-`> nas.get('filesystem', name='myFilesystem')`
+`> nas.get('resourceName')`
 
-Or by ID:
+You can specify the fields to retrieve:
 
-`> nas.get('filesystem', id='fs_3')`
+`> nas.get('resourceName', fields='field1,field2')`
 
-### Create a NAS Server
+#### Instance Query
 
-`> nas.create('nasServer', 'cifs01', 'spa', 'pool_1')`
+You can query an instance by ID:
 
-`cifs01` is the name of the NAS Server.
-`spa` is the ID of the home Service Processor.
-`pool_1` is the ID of the storage pool.
+`> nas.get('resourceName', rid='resourceId')`
+
+Or by name:
+
+`> nas.get('resourceName', rname='resourceName')`
+
+Both instance queries (by ID or Name) take the same field selections:
+
+`> nas.get('resourceName', rname='resourceName', fields='field1,field2')`
+
 
