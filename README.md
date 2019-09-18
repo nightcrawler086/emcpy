@@ -73,73 +73,73 @@ Python Client for EMC NAS (Unity/VNX) Platforms
 | quotaConfig | x | | | | |
 | storageResource | x | | | | |
 | storageResourceCapabilityProfile | x | | | | |
-| storageTier | | | | | |
-| systemCapacity | | | | | |
-| treeQuota | | | | | |
-| userQuota | | | | | |
-| virtualDisk | | | | | |
-| virtualVolume | | | | | |
-| dae | | | | | |
-| disk | | | | | |
-| dpe | | | | | |
-| encryption | | | | | |
-| ethernetPort | | | | | |
-| kmipServer | | | | | |
-| ssc | | | | | |
-| ssd | | | | | |
-| storageProcessor | | | | | |
-| autodownloadSoftwareVersion | | | | | |
-| basicSystemInfo | | | | | |
-| candidateSoftwareVersion| | | | | |
-| feature | | | | | |
-| importSession | | | | | |
-| installedSoftwareVersion | | | | | |
-| license | | | | | |
-| ntpServer | | | | | |
-| remoteSyslog | | | | | |
-| serviceContract | | | | | |
-| softwareUpgradeSession | | | | | |
-| system | | | | | |
-| systemInformation | | | | | |
-| systemLimit | | | | | |
-| systemTime | | | | | |
-| tbn | | | | | |
-| tbnConfig | | | | | |
-| upgradeSession | | | | | |
-| archive | | | | | | 
+| storageTier | x | | | | |
+| systemCapacity | x | | | | |
+| treeQuota | x | | | | |
+| userQuota | x | | | | |
+| virtualDisk | x | | | | |
+| virtualVolume | x | | | | |
+| dae | x | | | | |
+| disk | x | | | | |
+| dpe | x | | | | |
+| encryption | x | | | | |
+| ethernetPort | x | | | | |
+| kmipServer | x | | | | |
+| ssc | x | | | | |
+| ssd | x | | | | |
+| storageProcessor | x | | | | |
+| autodownloadSoftwareVersion | x | | | | |
+| basicSystemInfo | x | | | | |
+| candidateSoftwareVersion | x | | | | |
+| feature | x | | | | |
+| importSession | x | | | | |
+| installedSoftwareVersion | x | | | | |
+| license | x | | | | |
+| ntpServer | x | | | | |
+| remoteSyslog | x | | | | |
+| serviceContract | x | | | | |
+| softwareUpgradeSession | x | | | | |
+| system | x | | | | |
+| systemInformation | x | | | | |
+| systemLimit | x | | | | |
+| systemTime | x | | | | |
+| tbn | x | | | | |
+| tbnConfig | x | | | | |
+| upgradeSession | x | | | | |
+| archive | x | | | | | 
 | metric | | | | | | 
 | metricCollection | | | | | | 
 | metricQueryResult | | | | | | 
 | metricRealTimeQuery | | | | | | 
 | metricService | | | | | | 
 | metricValue | | | | | | 
-| ldapServer | | | | | |
-| remoteInterface | | | | | |
-| replicationInterface | | | | | |
-| replicationSession | | | | | |
-| snap | | | | | |
-| snapSchedule | | | | | |
-| ioLimitPolicy | | | | | |
-| ioLimitRule | | | | | |
-| ioLimitSetting | | | | | |
+| ldapServer | x | | | | |
+| remoteInterface | x | | | | |
+| replicationInterface | x | | | | |
+| replicationSession | x | | | | |
+| snap | x | | | | |
+| snapSchedule | x | | | | |
+| ioLimitPolicy | x | | | | |
+| ioLimitRule | x | | | | |
+| ioLimitSetting | x | | | | |
 | configCaptureResult | | | | | |
 | coreDump | | | | | |
 | dataCollectionResult | | | | | |
-| esrsParam | | | | | |
-| esrsPolicyManager | | | | | |
-| serviceAction | | | | | |
-| serviceInfo | | | | | |
-| supportAsset | | | | | |
-| supportProxy | | | | | |
-| supportService | | | | | |
-| technicalAdvisory | | | | | |
-| crl | | | | | |
-| loginSessionInfo | | | | | |
-| role | | | | | |
-| roleMapping | | | | | |
-| securitySettings | | | | | |
-| user | | | | | |
-| x509Certificate | | | | | |
+| esrsParam | x | | | | |
+| esrsPolicyManager | x | | | | |
+| serviceAction | x | | | | |
+| serviceInfo | x | | | | |
+| supportAsset | x | | | | |
+| supportProxy | x | | | | |
+| supportService | x | | | | |
+| technicalAdvisory | x | | | | |
+| crl | x | | | | |
+| loginSessionInfo | x | | | | |
+| role | x | | | | |
+| roleMapping | x | | | | |
+| securitySettings | x | | | | |
+| user | x | | | | |
+| x509Certificate | x | | | | |
 
 ### Import the module
 
