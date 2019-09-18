@@ -5,73 +5,74 @@ Python Client for EMC NAS (Unity/VNX) Platforms
 
 ### Supported Operations
 
-| Resource | Get | Create | Modify | Delete |
-| -------- | --- | ------ | ------ | ------ |
-| cifsServer | x | x | x | x |
-| dnsServer | | | | | |
-| fileDNSServer | | | | | |
-| fileInterface | | | | | |
-| fileKerberosServer | | | | | |
-| fileLDAPServer | | | | | |
-| fileNDMPServer | | | | | |
-| fileNISServer | | | | | |
-| fsnPort | | | | | |
-| ftpServer | | | | | |
-| ipInterface | | | | | |
-| ipPort | | | | | |
-| iscsiNode | | | | | |
-| iscsiPortal | | | | | |
-| iscsiSettings | | | | | |
-| linkAggregation | | | | | |
-| mgmtInterface | | | | | |
-| mgmtInterfaceSettings | | | | | |
-| nasServer | | | | | |
-| nfsServer | | | | | |
-| preferredInterfaceSettings | | | | | |
-| route | | | | | |
-| smptServer | | | | | |
-| tenant | | | | | |
-| urServer | | | | | |
-| virusChecker | | | | | |
-| vlanInfo | | | | | |
-| alert | | | | | |
-| alertConfig | | | | | |
+| Resource | Get | Create | Modify | Delete | Supported Actions |
+| -------- | --- | ------ | ------ | ------ | ----------------- |
+| cifsServer | x | x | x | x | - |
+| dnsServer | x | - | x | - | - |
+| fileDNSServer | x | x | x | x | - |
+| fileInterface | x | x | x | x | - |
+| fileKerberosServer | x | x | x | x | - |
+| fileLDAPServer | x | x | x | x | - |
+| fileNDMPServer | x | x | x | x | - |
+| fileNISServer | x | x | x | x | - |
+| fsnPort | x | x | x | x |  |
+| ftpServer | x | x | x | x | - |
+| ipInterface | x | - | - | - | |
+| ipPort | x | x | - | - | |
+| iscsiNode | x | - | x | - | - |
+| iscsiPortal | x | x | x | x | - |
+| iscsiSettings | x | - | x | - | - |
+| linkAggregation | x | x | x | x | |
+| mgmtInterface | x | x | x | x | - |
+| mgmtInterfaceSettings | x | - | x | - | - |
+| nasServer | x | x | x | x | |
+| nfsServer | x | x | x | x | - |
+| preferredInterfaceSettings | x | - | | - | - |
+| route | x | x | x | x | x |
+| smtpServer | x | x | x | x | - |
+| tenant | x | x | x | x | - |
+| urServer | x | - | x | - | - |
+| virusChecker | x | - | x | - | - |
+| vlanInfo | x | - | - | - | - |
+| vmwareNasPEServer | x | x | - | x | - |
+| alert | x | | | | |
+| alertConfig | x | | | | |
 | alertConfigSMTPTarget | | | | | |
-| alertEmailConfig | | | | | |
-| event | | | | | |
-| cifsShare | | | | | |
-| datastore | | | | | |
-| host | | | | | |
-| hostContainer | | | | | |
-| hostIPPort | | | | | |
-| hostInitiator | | | | | |
-| hostInitiatorPath | | | | | |
+| alertEmailConfig | x | | | | |
+| event | x | | | | |
+| cifsShare | x | | | | |
+| datastore | x | | | | |
+| host | x | | | | |
+| hostContainer | x | | | | |
+| hostIPPort | x | | | | |
+| hostInitiator | x | | | | |
+| hostInitiatorPath | x | | | | |
 | hostLUN | | | | | |
-| hostVVolDatastore | | | | | |
-| nfsShare | | | | | |
-| remoteSystem | | | | | |
-| rpChapSettings | | | | | |
-| vm | | | | | |
-| vmDisk | | | | | |
-| vmwarePE | | | | | |
-| aclUser | | | | | |
-| capabilityProfile | | | | | |
-| dhsmConnection | | | | | |
-| dhsmServer | | | | | |
+| hostVVolDatastore | x | | | | |
+| nfsShare | x | | | | |
+| remoteSystem | x | | | | |
+| rpChapSettings | x | | | | |
+| vm | x | | | | |
+| vmDisk | x | | | | |
+| vmwarePE | x | | | | |
+| aclUser | x | | | | |
+| capabilityProfile | x | | | | |
+| dhsmConnection | x | | | | |
+| dhsmServer | x | | | | |
 | fastCache | | | | | |
-| fastVP | | | | | |
-| fileEventsPool | | | | | |
-| fileEventsPublisher | | | | | |
-| filesystem | | | | | |
-| lun | | | | | |
-| moveSession | | | | | |
-| pool | | | | | |
-| poolConsumer | | | | | |
-| poolConsumerAllocation | | | | | |
-| poolUnit | | | | | |
-| quotaConfig | | | | | |
-| storageResource | | | | | |
-| storageResourceCapabilityProfile | | | | | |
+| fastVP | x | | | | |
+| fileEventsPool | x | | | | |
+| fileEventsPublisher | x | | | | |
+| filesystem | x | | | | |
+| lun | x | | | | |
+| moveSession | x | | | | |
+| pool | x | | | | |
+| poolConsumer | x | | | | |
+| poolConsumerAllocation | x | | | | |
+| poolUnit | x | | | | |
+| quotaConfig | x | | | | |
+| storageResource | x | | | | |
+| storageResourceCapabilityProfile | x | | | | |
 | storageTier | | | | | |
 | systemCapacity | | | | | |
 | treeQuota | | | | | |

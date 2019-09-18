@@ -345,4 +345,4 @@ class storageResource:
         response = self.session.delete(endpoint, params=timeout, data=body)
         return response
 
-    def modify(self, resource, rid=None, rname=None, timeout=None, **kwargs):
+    #def modify(self, resource, rid=None, rname=None, timeout=None, **kwargs):
