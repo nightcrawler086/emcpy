@@ -9,6 +9,7 @@ Python Client for EMC NAS (Unity/VNX) Platforms
 | -------- | --- | ------ | ------ | ------ |
 | cifsServer | x | x | x | x |
 | set of operations here |
+| -------------|
 | dnsServer | | | | | |
 | fileDNSServer | | | | | |
 | fileInterface | | | | | |
