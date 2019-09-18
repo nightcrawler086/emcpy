@@ -8,8 +8,6 @@ Python Client for EMC NAS (Unity/VNX) Platforms
 | Resource | Get | Create | Modify | Delete |
 | -------- | --- | ------ | ------ | ------ |
 | cifsServer | x | x | x | x |
-| set of operations here |
-| -------------|
 | dnsServer | | | | | |
 | fileDNSServer | | | | | |
 | fileInterface | | | | | |
