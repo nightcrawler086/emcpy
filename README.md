@@ -37,36 +37,37 @@ Python Client for EMC NAS (Unity/VNX) Platforms
 | vmwareNasPEServer | x | x | - | x | - |
 | alert | x | | | | |
 | alertConfig | x | | | | |
-| alertConfigSMTPTarget | | | | | |
-| alertEmailConfig | x | | | | |
+| alertConfigSMTPTarget | x | x | | | |
+| alertEmailConfig | x | x | | | |
+| job | x | x | | | |
 | event | x | | | | |
-| cifsShare | x | | | | |
+| cifsShare | x | x | | | |
 | datastore | x | | | | |
-| host | x | | | | |
-| hostContainer | x | | | | |
-| hostIPPort | x | | | | |
-| hostInitiator | x | | | | |
+| host | x | x | | | |
+| hostContainer | x | x | | | |
+| hostIPPort | x | x | | | |
+| hostInitiator | x | x | | | |
 | hostInitiatorPath | x | | | | |
 | hostLUN | | | | | |
 | hostVVolDatastore | x | | | | |
-| nfsShare | x | | | | |
-| remoteSystem | x | | | | |
+| nfsShare | x | x | | | |
+| remoteSystem | x | x | | | |
 | rpChapSettings | x | | | | |
 | vm | x | | | | |
 | vmDisk | x | | | | |
 | vmwarePE | x | | | | |
 | aclUser | x | | | | |
-| capabilityProfile | x | | | | |
-| dhsmConnection | x | | | | |
-| dhsmServer | x | | | | |
+| capabilityProfile | x | x | | | |
+| dhsmConnection | x | x | | | |
+| dhsmServer | x | x | | | |
 | fastCache | | | | | |
 | fastVP | x | | | | |
-| fileEventsPool | x | | | | |
+| fileEventsPool | x | x | | | |
 | fileEventsPublisher | x | | | | |
 | filesystem | x | | | | |
 | lun | x | | | | |
-| moveSession | x | | | | |
-| pool | x | | | | |
+| moveSession | x | x | | | |
+| pool | x | x | | | |
 | poolConsumer | x | | | | |
 | poolConsumerAllocation | x | | | | |
 | poolUnit | x | | | | |
@@ -75,8 +76,8 @@ Python Client for EMC NAS (Unity/VNX) Platforms
 | storageResourceCapabilityProfile | x | | | | |
 | storageTier | x | | | | |
 | systemCapacity | x | | | | |
-| treeQuota | x | | | | |
-| userQuota | x | | | | |
+| treeQuota | x | x | | | |
+| userQuota | x | x | | | |
 | virtualDisk | x | | | | |
 | virtualVolume | x | | | | |
 | dae | x | | | | |
@@ -84,7 +85,7 @@ Python Client for EMC NAS (Unity/VNX) Platforms
 | dpe | x | | | | |
 | encryption | x | | | | |
 | ethernetPort | x | | | | |
-| kmipServer | x | | | | |
+| kmipServer | x | x | | | |
 | ssc | x | | | | |
 | ssd | x | | | | |
 | storageProcessor | x | | | | |
@@ -96,7 +97,7 @@ Python Client for EMC NAS (Unity/VNX) Platforms
 | installedSoftwareVersion | x | | | | |
 | license | x | | | | |
 | ntpServer | x | | | | |
-| remoteSyslog | x | | | | |
+| remoteSyslog | x | x | | | |
 | serviceContract | x | | | | |
 | softwareUpgradeSession | x | | | | |
 | system | x | | | | |
@@ -113,10 +114,10 @@ Python Client for EMC NAS (Unity/VNX) Platforms
 | metricRealTimeQuery | | | | | | 
 | metricService | | | | | | 
 | metricValue | | | | | | 
-| ldapServer | x | | | | |
+| ldapServer | x | x | | | |
 | remoteInterface | x | | | | |
-| replicationInterface | x | | | | |
-| replicationSession | x | | | | |
+| replicationInterface | x | x | | | |
+| replicationSession | x | x | | | |
 | snap | x | | | | |
 | snapSchedule | x | | | | |
 | ioLimitPolicy | x | | | | |
