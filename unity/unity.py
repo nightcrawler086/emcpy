@@ -345,4 +345,26 @@ class storageResource:
         response = self.session.delete(endpoint, params=timeout, data=body)
         return response
 
-    #def modify(self, resource, rid=None, rname=None, timeout=None, **kwargs):
+    def modify(self, resource, rid=None, rname=None, timeout=None, **kwargs):
+        """
+        @todo - need to complete and test.
+        :param resource:
+        :param rid:
+        :param rname:
+        :param timeout:
+        :param kwargs:
+        :return:
+        """
+        if rid:
+            action = 'Modify{}'.format(resource)
+        elif rname:
+            action = 'Modify{}ByName'.format(resource)
+        else:
+            print('You must provide a name or ID of a {} to modify'.format(resource))
+            return
+        class_name = getattr(classes, resource)
+        if not class_name:
+            print('Invalid resource or class does not exist.')
+            return
+        obj = class_name(*kwargs)
+        endpoint = 'https://{}/{}/{}/{}/{}'.format(self.name, 'api/instances/storageResource/', rid, 'action', action )
