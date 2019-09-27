@@ -15,7 +15,7 @@ Python Client for EMC NAS (Unity/VNX) Platforms
 | fileLDAPServer | x | x | x | x | - |
 | fileNDMPServer | x | x | x | x | - |
 | fileNISServer | x | x | x | x | - |
-| fsnPort | x | x | x | x |  |
+| fsnPort | x | x | x | x | recommendForInterface |
 | ftpServer | x | x | x | x | - |
 | ipInterface | x | - | - | - | |
 | ipPort | x | x | - | - | |
@@ -118,8 +118,8 @@ Python Client for EMC NAS (Unity/VNX) Platforms
 | remoteInterface | x | | | | |
 | replicationInterface | x | x | | | |
 | replicationSession | x | x | | | |
-| snap | x | | | | |
-| snapSchedule | x | | | | |
+| snap | x | x | | | |
+| snapSchedule | x | x | | | |
 | ioLimitPolicy | x | | | | |
 | ioLimitRule | x | | | | |
 | ioLimitSetting | x | | | | |
@@ -137,9 +137,9 @@ Python Client for EMC NAS (Unity/VNX) Platforms
 | crl | x | | | | |
 | loginSessionInfo | x | | | | |
 | role | x | | | | |
-| roleMapping | x | | | | |
+| roleMapping | x | x | | | |
 | securitySettings | x | | | | |
-| user | x | | | | |
+| user | x | x | | | |
 | x509Certificate | x | | | | |
 
 ### Usage

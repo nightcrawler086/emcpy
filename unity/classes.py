@@ -469,3 +469,40 @@ class replicationSession:
                 self.__setattr__(k, IdObject(v))
 
 
+class snap:
+    def __init__(self, storageResource, **kwargs):
+        self.storageResource = IdObject(storageResource)
+        self.__dict__.update(kwargs)
+
+
+class snapSchedule:
+    def __index__(self, name: str, rules: list, **kwargs):
+        self.name = name
+        self.rules = rules
+        self.__dict__.update(kwargs)
+
+
+class roleMapping:
+    def __init__(self, authorityName: str, entityName: str, roleName: str, mappingType: enum):
+        """
+
+        :param authorityName:
+        :param entityName:
+        :param roleName:
+        :param mappingType: 0 - ldapgroup - LDAP Group role.
+                            1 - ldapuser - LDAP User role.
+                            2 - localuser - Local User role.
+                            3 - unknown - Unknown role type.
+        """
+        self.authorityName = authorityName
+        self.entityName = entityName
+        self.roleName = roleName
+        self.mappingType = mappingType
+
+
+class user:
+    def __init__(self, user, role, password):
+        self.user = user
+        self.role = role
+        self.password = password
+
