@@ -3,11 +3,57 @@ Python Client for EMC NAS (Unity/VNX) Platforms
 
 ## Unity
 
+### Usage
+
+#### Import the module
+
+`> from unity import unity`
+
+#### Instantiate the class
+
+`> nas = unity.Unity(hostname, user, password)`
+
+### Login to the REST API
+
+`> nas.connect()`
+
+OR
+
+`> nas.connect(quiet=True)`
+
+
+### Queries
+
+Most queries can be done through the `get` function.
+
+#### Collection Query
+
+`> nas.get('resourceName')`
+
+You can specify the fields to retrieve:
+
+`> nas.get('resourceName', fields='field1,field2')`
+
+#### Instance Query
+
+You can query an instance by ID:
+
+`> nas.get('resourceName', rid='resourceId')`
+
+Or by name:
+
+`> nas.get('resourceName', rname='resourceName')`
+
+Both instance queries (by ID or Name) take the same field selections:
+
+`> nas.get('resourceName', rname='resourceName', fields='field1,field2')`
+
+
 ### Supported Operations
 
 | Resource | Get | Create | Modify | Delete | Supported Actions |
 | -------- | --- | ------ | ------ | ------ | ----------------- |
-| cifsServer | x | x | x | x | - |
+| cifsServer | y | x | x | x | - |
 | dnsServer | x | - | x | - | - |
 | fileDNSServer | x | x | x | x | - |
 | fileInterface | x | x | x | x | - |
@@ -141,50 +187,3 @@ Python Client for EMC NAS (Unity/VNX) Platforms
 | securitySettings | x | | | | |
 | user | x | x | | | |
 | x509Certificate | x | | | | |
-
-### Usage
-
-#### Import the module
-
-`> from unity import unity`
-
-#### Instantiate the class
-
-`> nas = unity.Unity(hostname, user, password)`
-
-### Login to the REST API
-
-`> nas.connect()`
-
-OR
-
-`> nas.connect(quiet=True)`
-
-
-### Queries
-
-Most queries can be done through the `get` function.
-
-#### Collection Query
-
-`> nas.get('resourceName')`
-
-You can specify the fields to retrieve:
-
-`> nas.get('resourceName', fields='field1,field2')`
-
-#### Instance Query
-
-You can query an instance by ID:
-
-`> nas.get('resourceName', rid='resourceId')`
-
-Or by name:
-
-`> nas.get('resourceName', rname='resourceName')`
-
-Both instance queries (by ID or Name) take the same field selections:
-
-`> nas.get('resourceName', rname='resourceName', fields='field1,field2')`
-
-

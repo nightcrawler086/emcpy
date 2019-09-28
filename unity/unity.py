@@ -288,6 +288,18 @@ class Unity:
         self.session.headers.update({'Content-Type': 'application/json'})
         return response
 
+    def action(self, resource, action, rid: str = None, rname: str = None, **kwargs):
+        """
+
+        :param resource:
+        :param action:
+        :param rid:
+        :param rname:
+        :param kwargs:
+        :return:
+        """
+        endpoint = 'https://{}/{}/{}/{}/{}'.format(self.name, 'api/types', resource, 'action', action)
+
 
 class storageResource:
     def __init__(self, name, session):
