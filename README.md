@@ -39,7 +39,7 @@ fields are explicitly specified.
 You can specify the fields to retrieve:
 
 ```python
-> nas.get('filesystem', fields='name,id')
+>>> nas.get('filesystem', fields='name,id')
 ```
 
 #### Instance Query
@@ -68,7 +68,7 @@ Almost all create operations can be done through the `create` function (except t
 
 Result:
 
-```
+```python
 {'@base': 'https://192.168.1.130/api/instances/nasServer', 'updated': '2019-09-29T03:45:06.402Z', 
 'links': [{'rel': 'self', 'href': '/nas_9'}], 'content': {'id': 'nas_9'}}
 ```
