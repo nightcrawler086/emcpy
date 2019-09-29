@@ -59,7 +59,7 @@ and optional arguments are named.
 
 Result:
 
-```json
+```
 {'@base': 'https://192.168.1.130/api/instances/nasServer', 'updated': '2019-09-29T03:45:06.402Z', 
 'links': [{'rel': 'self', 'href': '/nas_9'}], 'content': {'id': 'nas_9'}}
 ```
