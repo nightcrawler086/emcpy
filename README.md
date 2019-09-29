@@ -7,15 +7,21 @@ Python Client for EMC NAS (Unity/VNX) Platforms
 
 #### Import the module
 
-`> from unity import unity`
+```python
+>>> import unity
+```
 
 #### Instantiate the class
 
-`> nas = unity.Unity(hostname, user, password)`
+`>>> nas = unity.Unity(hostname, user, password)`
 
 ### Login to the REST API
+```python
+>>> nas.connect()
+{'content': {'id': '0', 'name': 'UnityVSA-50', 'model': 'UnityVSA', 'serialNumber': 'VIRT19302RRRAL', 'platform': 'Tungsten_SingleSP'}}
+```
 
-`> nas.connect()`
+The above output can be silenced by passing the `quiet=True` argument to the `connect()` method.
 
 ### Queries
 
@@ -23,28 +29,32 @@ Most queries can be done through the `get` function (all except the `storageReso
 
 #### Collection Query
 
-`> nas.get('resourceName')`
+```python
+>>> nas.get('filesystem')
+```
 
 **Note:** The API will only return the ID of the queried resource, unless other 
 fields are explicitly specified.
 
 You can specify the fields to retrieve:
 
-`> nas.get('resourceName', fields='field1,field2')`
+```python
+> nas.get('filesystem', fields='name,id')
+```
 
 #### Instance Query
 
 You can query an instance by ID:
 
-`> nas.get('resourceName', rid='resourceId')`
+```python
+>>> nas.get('filesystem', rid='fs_1')
+```
 
 Or by name:
 
-`> nas.get('resourceName', rname='resourceName')`
-
-Both instance queries (by ID or Name) take the same field specifications:
-
-`> nas.get('resourceName', rname='resourceName', fields='field1,field2')`
+```python
+>>> nas.get('filesystem', rname='myFs')
+```
 
 ### Creates
 
@@ -52,10 +62,9 @@ Almost all create operations can be done through the `create` function (except t
 
 #### Create a NAS Server
 
-`> nas.create('nasServer', 'myNasServer', 'spa', 'pool_1')`
-
-**Note:** For all supported create operations, required arguments are positional
-and optional arguments are named.
+```python
+>>> nas.create('nasServer', 'myNasServer', 'spa', 'pool_1')
+```
 
 Result:
 
@@ -63,6 +72,17 @@ Result:
 {'@base': 'https://192.168.1.130/api/instances/nasServer', 'updated': '2019-09-29T03:45:06.402Z', 
 'links': [{'rel': 'self', 'href': '/nas_9'}], 'content': {'id': 'nas_9'}}
 ```
+
+**Note:** For all supported create operations, required arguments are positional
+and optional arguments are named.  For information on the arguments, you can view some help
+like this:
+
+(After importing the module)
+```python
+>>> help(unity.classes.nasServer)
+```
+
+If the above doesn't show anything useful right now, it will eventually ;).
 
 ### Supported Operations
 
