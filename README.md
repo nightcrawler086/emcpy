@@ -76,7 +76,7 @@ Result:
 **Note:** For all supported create operations, required arguments are positional
 and optional arguments are named.
 
-#### Managing storage
+### Managing storage
 
 The `storageResource` resource in the API is used to manage all storage in the system.  There are different types of
 storage resources you can create, and each of them available from within the `storageResource` resource.
