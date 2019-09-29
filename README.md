@@ -17,18 +17,16 @@ Python Client for EMC NAS (Unity/VNX) Platforms
 
 `> nas.connect()`
 
-OR
-
-`> nas.connect(quiet=True)`
-
-
 ### Queries
 
-Most queries can be done through the `get` function.
+Most queries can be done through the `get` function (all except the `storageResource` resource).
 
 #### Collection Query
 
 `> nas.get('resourceName')`
+
+**Note:** The API will only return the ID of the queried resource, unless other 
+fields are explicitly specified.
 
 You can specify the fields to retrieve:
 
@@ -44,16 +42,33 @@ Or by name:
 
 `> nas.get('resourceName', rname='resourceName')`
 
-Both instance queries (by ID or Name) take the same field selections:
+Both instance queries (by ID or Name) take the same field specifications:
 
 `> nas.get('resourceName', rname='resourceName', fields='field1,field2')`
 
+### Creates
+
+Almost all create operations can be done through the `create` function (except the `storageResource` resource).
+
+#### Create a NAS Server
+
+`> nas.create('nasServer', 'myNasServer', 'spa', 'pool_1')`
+
+**Note:** For all supported create operations, required arguments are positional
+and optional arguments are named.
+
+Result:
+
+```json
+{'@base': 'https://192.168.1.130/api/instances/nasServer', 'updated': '2019-09-29T03:45:06.402Z', 
+'links': [{'rel': 'self', 'href': '/nas_9'}], 'content': {'id': 'nas_9'}}
+```
 
 ### Supported Operations
 
 | Resource | Get | Create | Modify | Delete | Supported Actions |
 | -------- | --- | ------ | ------ | ------ | ----------------- |
-| cifsServer | y | x | y | y | - |
+| cifsServer | y | y | y | y | - |
 | dnsServer | y | - | y | - | - |
 | fileDNSServer | y | y | y | y | - |
 | fileInterface | y | y | y | y | - |
@@ -187,3 +202,18 @@ Both instance queries (by ID or Name) take the same field selections:
 | securitySettings | y | | | | |
 | user | y | y | | | |
 | x509Certificate | y | | | | |
+
+### Other Supported Operations
+
+- File upload/download
+    - Ldap_Configuration (LDAP schema file)
+    - Ldap_CA_Certificate
+    - Username_Mappings
+    - Virus_Checker_Configuration
+    - Users
+    – Groups
+    - Hosts
+    - Netgroups
+    - User_Mapping_Report
+    - Kerberos_Key_Table
+    - Homedir
