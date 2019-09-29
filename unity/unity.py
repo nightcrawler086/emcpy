@@ -174,6 +174,7 @@ class Unity:
             print('Invalid resource name or class does not exist.')
         obj = class_name(*args, **kwargs)
         body = Unity.jsonify(obj)
+        # print(body)
         timeout = timeout or {}
         endpoint = 'https://{}/{}/{}/{}'.format(self.name, 'api/types', resource, 'instances')
         response = self.session.post(endpoint, data=body, params=timeout)

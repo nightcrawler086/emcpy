@@ -39,20 +39,36 @@ class OptObject(object):
 
 
 class cifsServer:
-    def __init__(self, nasServerId, **kwargs):
+    def __init__(self, nasServerId: str, **kwargs):
+        """
+        :param nasServerId: The ID of the NAS Server to create the CIFS server on
+        :param kwargs: All other available properties should be named
+        """
         self.nasServer = IdObject(nasServerId)
         self.__dict__.update(kwargs)
 
 
 class fileDNSServer:
-    def __init__(self, nasServerId, domain, addrList: list):
+    def __init__(self, nasServerId: str, domain: str, addrList: list):
+        """
+        :param nasServerId: The ID of the NAS Server to configure DNS
+        :param domain: Name of the domain (my.domain.com)
+        :param addrList: List of DNS Servers (this is a list object)
+        """
         self.nasServer = IdObject(nasServerId)
         self.domain = domain
         self.addresses = addrList
 
 
 class fileInterface:
-    def __init__(self, nasServerId, ipPortId, ipAddress, **kwargs):
+    def __init__(self, nasServerId: str, ipPortId: str, ipAddress: str, **kwargs):
+        """
+        :param nasServerId: The ID of the NAS Server to create the interface on
+        :param ipPortId: The ID of the IP Port to create the interface on
+        :param ipAddress: The IP Address to set on the interface, IPv4 and IPv6 are supported.
+                          The address can be specified with or without the bitmask (192.168.1.10/24).
+        :param kwargs: All other available properties should be named.
+        """
         self.nasServer = IdObject(nasServerId)
         self.ipPort = IdObject(ipPortId)
         self.ipAddress = ipAddress
