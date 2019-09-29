@@ -53,137 +53,137 @@ Both instance queries (by ID or Name) take the same field selections:
 
 | Resource | Get | Create | Modify | Delete | Supported Actions |
 | -------- | --- | ------ | ------ | ------ | ----------------- |
-| cifsServer | y | x | x | x | - |
-| dnsServer | x | - | x | - | - |
-| fileDNSServer | x | x | x | x | - |
-| fileInterface | x | x | x | x | - |
-| fileKerberosServer | x | x | x | x | - |
-| fileLDAPServer | x | x | x | x | - |
-| fileNDMPServer | x | x | x | x | - |
-| fileNISServer | x | x | x | x | - |
-| fsnPort | x | x | x | x | recommendForInterface |
-| ftpServer | x | x | x | x | - |
-| ipInterface | x | - | - | - | |
-| ipPort | x | x | - | - | |
-| iscsiNode | x | - | x | - | - |
-| iscsiPortal | x | x | x | x | - |
-| iscsiSettings | x | - | x | - | - |
-| linkAggregation | x | x | x | x | |
-| mgmtInterface | x | x | x | x | - |
-| mgmtInterfaceSettings | x | - | x | - | - |
-| nasServer | x | x | x | x | |
-| nfsServer | x | x | x | x | - |
-| preferredInterfaceSettings | x | - | | - | - |
-| route | x | x | x | x | x |
-| smtpServer | x | x | x | x | - |
-| tenant | x | x | x | x | - |
-| urServer | x | - | x | - | - |
-| virusChecker | x | - | x | - | - |
-| vlanInfo | x | - | - | - | - |
-| vmwareNasPEServer | x | x | - | x | - |
-| alert | x | | | | |
-| alertConfig | x | | | | |
-| alertConfigSMTPTarget | x | x | | | |
-| alertEmailConfig | x | x | | | |
-| job | x | x | | | |
-| event | x | | | | |
-| cifsShare | x | x | | | |
-| datastore | x | | | | |
-| host | x | x | | | |
-| hostContainer | x | x | | | |
-| hostIPPort | x | x | | | |
-| hostInitiator | x | x | | | |
-| hostInitiatorPath | x | | | | |
+| cifsServer | y | x | y | y | - |
+| dnsServer | y | - | y | - | - |
+| fileDNSServer | y | y | y | y | - |
+| fileInterface | y | y | y | y | - |
+| fileKerberosServer | y | y | y | y | - |
+| fileLDAPServer | y | y | y | y | - |
+| fileNDMPServer | y | y | y | y | - |
+| fileNISServer | y | y | y | y | - |
+| fsnPort | y | y | y | y | recommendForInterface |
+| ftpServer | y | y | y | y | - |
+| ipInterface | y | - | - | - | |
+| ipPort | y | y | - | - | |
+| iscsiNode | y | - | y | - | - |
+| iscsiPortal | y | y | y | y | - |
+| iscsiSettings | y | - | y | - | - |
+| linkAggregation | y | y | y | y | |
+| mgmtInterface | y | y | y | y | - |
+| mgmtInterfaceSettings | y | - | y | - | - |
+| nasServer | y | y | y | y | Ping, PingByName, Traceroute, TracerouteByName, generateUserMappingsReport, generateUserMappingsReportByName, UpdateUserMappings, UpdateUserMappingsByName|
+| nfsServer | y | y | y | y | - |
+| preferredInterfaceSettings | y | - | | - | - |
+| route | y | y | y | y | y |
+| smtpServer | y | y | y | y | - |
+| tenant | y | y | y | y | - |
+| urServer | y | - | y | - | - |
+| virusChecker | y | - | y | - | - |
+| vlanInfo | y | - | - | - | - |
+| vmwareNasPEServer | y | y | - | y | - |
+| alert | y | | | | |
+| alertConfig | y | | | | |
+| alertConfigSMTPTarget | y | y | | | |
+| alertEmailConfig | y | y | | | |
+| job | y | y | | | |
+| event | y | | | | |
+| cifsShare | y | y | | | |
+| datastore | y | | | | |
+| host | y | y | | | |
+| hostContainer | y | y | | | |
+| hostIPPort | y | y | | | |
+| hostInitiator | y | y | | | |
+| hostInitiatorPath | y | | | | |
 | hostLUN | | | | | |
-| hostVVolDatastore | x | | | | |
-| nfsShare | x | x | | | |
-| remoteSystem | x | x | | | |
-| rpChapSettings | x | | | | |
-| vm | x | | | | |
-| vmDisk | x | | | | |
-| vmwarePE | x | | | | |
-| aclUser | x | | | | |
-| capabilityProfile | x | x | | | |
-| dhsmConnection | x | x | | | |
-| dhsmServer | x | x | | | |
+| hostVVolDatastore | y | | | | |
+| nfsShare | y | y | | | |
+| remoteSystem | y | y | | | |
+| rpChapSettings | y | | | | |
+| vm | y | | | | |
+| vmDisk | y | | | | |
+| vmwarePE | y | | | | |
+| aclUser | y | | | | |
+| capabilityProfile | y | y | | | |
+| dhsmConnection | y | y | | | |
+| dhsmServer | y | y | | | |
 | fastCache | | | | | |
-| fastVP | x | | | | |
-| fileEventsPool | x | x | | | |
-| fileEventsPublisher | x | | | | |
-| filesystem | x | | | | |
-| lun | x | | | | |
-| moveSession | x | x | | | |
-| pool | x | x | | | |
-| poolConsumer | x | | | | |
-| poolConsumerAllocation | x | | | | |
-| poolUnit | x | | | | |
-| quotaConfig | x | | | | |
-| storageResource | x | | | | |
-| storageResourceCapabilityProfile | x | | | | |
-| storageTier | x | | | | |
-| systemCapacity | x | | | | |
-| treeQuota | x | x | | | |
-| userQuota | x | x | | | |
-| virtualDisk | x | | | | |
-| virtualVolume | x | | | | |
-| dae | x | | | | |
-| disk | x | | | | |
-| dpe | x | | | | |
-| encryption | x | | | | |
-| ethernetPort | x | | | | |
-| kmipServer | x | x | | | |
-| ssc | x | | | | |
-| ssd | x | | | | |
-| storageProcessor | x | | | | |
-| autodownloadSoftwareVersion | x | | | | |
-| basicSystemInfo | x | | | | |
-| candidateSoftwareVersion | x | | | | |
-| feature | x | | | | |
-| importSession | x | | | | |
-| installedSoftwareVersion | x | | | | |
-| license | x | | | | |
-| ntpServer | x | | | | |
-| remoteSyslog | x | x | | | |
-| serviceContract | x | | | | |
-| softwareUpgradeSession | x | | | | |
-| system | x | | | | |
-| systemInformation | x | | | | |
-| systemLimit | x | | | | |
-| systemTime | x | | | | |
-| tbn | x | | | | |
-| tbnConfig | x | | | | |
-| upgradeSession | x | | | | |
-| archive | x | | | | | 
+| fastVP | y | | | | |
+| fileEventsPool | y | y | | | |
+| fileEventsPublisher | y | | | | |
+| filesystem | y | | | | |
+| lun | y | | | | |
+| moveSession | y | y | | | |
+| pool | y | y | | | |
+| poolConsumer | y | | | | |
+| poolConsumerAllocation | y | | | | |
+| poolUnit | y | | | | |
+| quotaConfig | y | | | | |
+| storageResource | y | | | | |
+| storageResourceCapabilityProfile | y | | | | |
+| storageTier | y | | | | |
+| systemCapacity | y | | | | |
+| treeQuota | y | y | | | |
+| userQuota | y | y | | | |
+| virtualDisk | y | | | | |
+| virtualVolume | y | | | | |
+| dae | y | | | | |
+| disk | y | | | | |
+| dpe | y | | | | |
+| encryption | y | | | | |
+| ethernetPort | y | | | | |
+| kmipServer | y | y | | | |
+| ssc | y | | | | |
+| ssd | y | | | | |
+| storageProcessor | y | | | | |
+| autodownloadSoftwareVersion | y | | | | |
+| basicSystemInfo | y | | | | |
+| candidateSoftwareVersion | y | | | | |
+| feature | y | | | | |
+| importSession | y | | | | |
+| installedSoftwareVersion | y | | | | |
+| license | y | | | | |
+| ntpServer | y | | | | |
+| remoteSyslog | y | y | | | |
+| serviceContract | y | | | | |
+| softwareUpgradeSession | y | | | | |
+| system | y | | | | |
+| systemInformation | y | | | | |
+| systemLimit | y | | | | |
+| systemTime | y | | | | |
+| tbn | y | | | | |
+| tbnConfig | y | | | | |
+| upgradeSession | y | | | | |
+| archive | y | | | | | 
 | metric | | | | | | 
 | metricCollection | | | | | | 
 | metricQueryResult | | | | | | 
 | metricRealTimeQuery | | | | | | 
 | metricService | | | | | | 
 | metricValue | | | | | | 
-| ldapServer | x | x | | | |
-| remoteInterface | x | | | | |
-| replicationInterface | x | x | | | |
-| replicationSession | x | x | | | |
-| snap | x | x | | | |
-| snapSchedule | x | x | | | |
-| ioLimitPolicy | x | | | | |
-| ioLimitRule | x | | | | |
-| ioLimitSetting | x | | | | |
+| ldapServer | y | y | | | |
+| remoteInterface | y | | | | |
+| replicationInterface | y | y | | | |
+| replicationSession | y | y | | | |
+| snap | y | y | | | |
+| snapSchedule | y | y | | | |
+| ioLimitPolicy | y | | | | |
+| ioLimitRule | y | | | | |
+| ioLimitSetting | y | | | | |
 | configCaptureResult | | | | | |
 | coreDump | | | | | |
 | dataCollectionResult | | | | | |
-| esrsParam | x | | | | |
-| esrsPolicyManager | x | | | | |
-| serviceAction | x | | | | |
-| serviceInfo | x | | | | |
-| supportAsset | x | | | | |
-| supportProxy | x | | | | |
-| supportService | x | | | | |
-| technicalAdvisory | x | | | | |
-| crl | x | | | | |
-| loginSessionInfo | x | | | | |
-| role | x | | | | |
-| roleMapping | x | x | | | |
-| securitySettings | x | | | | |
-| user | x | x | | | |
-| x509Certificate | x | | | | |
+| esrsParam | y | | | | |
+| esrsPolicyManager | y | | | | |
+| serviceAction | y | | | | |
+| serviceInfo | y | | | | |
+| supportAsset | y | | | | |
+| supportProyy | y | | | | |
+| supportService | y | | | | |
+| technicalAdvisory | y | | | | |
+| crl | y | | | | |
+| loginSessionInfo | y | | | | |
+| role | y | | | | |
+| roleMapping | y | y | | | |
+| securitySettings | y | | | | |
+| user | y | y | | | |
+| x509Certificate | y | | | | |

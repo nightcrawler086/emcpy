@@ -350,7 +350,7 @@ class Lun:
     def __init__(self, name, poolId, size, **kwargs):
         self.name = name
         lun_params = {'isThinEnabled', 'isDataReductionEnabled', 'isAdvancedDedupEnabled',
-                      'defaultNode', 'hostAccess'}
+                      'defaultNode', 'hostAccess', 'defaultNode'}
         rep_params = {'isReplicationDestination'}
         snap_params = {'snapSchedule', 'isSnapSchedulePaused'}
         fastvp_params = {'tieringPolicy'}
@@ -483,7 +483,7 @@ class snapSchedule:
 
 
 class roleMapping:
-    def __init__(self, authorityName: str, entityName: str, roleName: str, mappingType: enum):
+    def __init__(self, authorityName: str, entityName: str, roleName: str, mappingType: int):
         """
 
         :param authorityName:

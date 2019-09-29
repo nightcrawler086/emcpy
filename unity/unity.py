@@ -298,7 +298,20 @@ class Unity:
         :param kwargs:
         :return:
         """
-        endpoint = 'https://{}/{}/{}/{}/{}'.format(self.name, 'api/types', resource, 'action', action)
+        if rname and rid:
+            print('You cannot specify both a resource name and ID.')
+            return
+        elif rname:
+            endpoint = 'https://{}/{}/{}/{}/{}'.format(self.name, 'api/instances', resource, 'name:{}'.format(rname),
+                                                       'action/{}'.format(action))
+        elif rid:
+            endpoint = 'https://{}/{}/{}/{}/{}'.format(self.name, 'api/instances', resource, rid,
+                                                       'action/{}'.format(action))
+        else:
+            endpoint = 'https://{}/{}/{}/{}/{}'.format(self.name, 'api/types', resource, 'action', action)
+        body = json.dumps(kwargs)
+        response = self.session.post(endpoint, data=body)
+        return response
 
 
 class storageResource:
