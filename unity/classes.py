@@ -326,7 +326,7 @@ class treeQuota:
         self.__dict__.update(kwargs)
 
 
-## Storage resources (LUN, ConsistencyGroup, VMwareLun, VMwareNFS, Filesystem, VVol
+## Storage resources (LUN, ConsistencyGroup, VMwareLun, VMwareNFS, Filesystem, VVol)
 
 class lunParameters:
     """

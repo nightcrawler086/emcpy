@@ -15,7 +15,7 @@ Python Client for EMC NAS (Unity/VNX) Platforms
 
 `>>> nas = unity.Unity(hostname, user, password)`
 
-### Login to the REST API
+### Login
 ```python
 >>> nas.connect()
 {'content': {'id': '0', 'name': 'UnityVSA-50', 'model': 'UnityVSA', 'serialNumber': 'VIRT19302RRRAL', 'platform': 'Tungsten_SingleSP'}}
@@ -74,8 +74,43 @@ Result:
 ```
 
 **Note:** For all supported create operations, required arguments are positional
-and optional arguments are named.  For information on the arguments, you can view some help
-like this:
+and optional arguments are named.
+
+#### Managing storage
+
+The `storageResource` resource in the API is used to manage all storage in the system.  There are different types of
+storage resources you can create, and each of them available from within the `storageResource` resource.
+
+Available resource types:
+
+- Lun
+- Consistency Group
+- VmwareLun
+- VmwareNfs
+- Filesystem
+- VVolDatastore
+
+The main focus of this module is the `Filesystem` storage resource.  Support for the other types may come more slowly.
+
+Since the way you would typically want to create storage on the system is nested inside a single resource, there is a 
+separate class to support this.  
+
+**Note:** There are resources for each storage type that you can query outside of the `storageResource` resource.
+
+For instance, I can query a filesystem like this:
+
+```python
+>>> nas.get('filesystem', rname='myFs')
+```
+
+However, the `filesystem` resource does not support creates/modifies.  That has to be done using the `storageResource`
+resource.  Like so:
+
+```python
+>>> nas.storageResource.create('Filesystem', 'myNewFs', 'pool_1', 'nas_1', '5G')
+```
+
+#### Help
 
 (After importing the module)
 ```python
