@@ -14,6 +14,9 @@ class IdObject(object):
     (ex. NasServer and NasServerId)
     """
     def __init__(self, oId):
+        """
+        :param oId: The object's ID
+        """
         self.id = oId
 
 
@@ -35,7 +38,9 @@ class OptObject(object):
     def __init__(self, **kwargs):
         self.__dict__.update(kwargs)
 
-# Configuring network communication
+#####################################
+# Configuring network communication #
+#####################################
 
 
 class cifsServer:
@@ -76,16 +81,21 @@ class fileInterface:
 
 
 class fileKeberosServer:
-    def __init__(self, nasServerId, realm, addresses, **kwargs):
+    def __init__(self, nasServerId: str, realm: str, addresses: list, **kwargs):
+        """
+        :param nasServerId: The ID of the NAS Server to configure the kerberos server on
+        :param realm: The realm to configure for the NAS Server
+        :param addresses: A list of addresses of the kerberos servers
+        :param kwargs: All other available properties are named
+        """
         self.nasServer = IdObject(nasServerId)
         self.realm = realm
         self.addresses = addresses
 
 
 class fileLDAPServer:
-    def __init__(self, nasServerId, authenticationType, authority, serverAddresses: list, **kwargs):
+    def __init__(self, nasServerId: str, authenticationType, authority: str, serverAddresses: list, **kwargs):
         """
-
         :param nasServerId: ID of the NAS Server on which to create
         :param authenticationType: From AuthenticationTypeEnum:
                                     0 = Anonymous
@@ -103,13 +113,22 @@ class fileLDAPServer:
 
 
 class fileNDMPServer:
-    def __init__(self, nasServerId, **kwargs):
+    def __init__(self, nasServerId: str, **kwargs):
+        """
+        :param nasServerId:  ID of the NAS Server to configure the NDMP Server
+        :param kwargs: All other properties are named.
+        """
         self.nasServer = IdObject(nasServerId)
         self.__dict__.update(kwargs)
 
 
 class fileNISServer:
-    def __init__(self, nasServerId, domain, addresses: list):
+    def __init__(self, nasServerId: str, domain: str, addresses: list):
+        """
+        :param nasServerId: ID of the NAS Server to configure the NIS Server
+        :param domain: Domain of the NIS Server
+        :param addresses: List of addresses for the NIS servers
+        """
         self.nasServer = IdObject(nasServerId)
         self.domain = domain
         self.addresses = addresses
@@ -198,10 +217,9 @@ class vmwareNasPEServer:
         self.fileInterfaces = fileInterfaces
 
 
-
-
-# Managing events and alerts
-
+##############################
+# Managing events and alerts #
+##############################
 
 class alertConfigSNMPTarget:
     def __init__(self, targetAddress, **kwargs):
@@ -215,7 +233,9 @@ class alertEmailConfig:
         self.__dict__.update(kwargs)
 
 
-# Managing jobs
+#################
+# Managing jobs #
+#################
 
 
 class job:
@@ -225,7 +245,9 @@ class job:
         self.__dict__.update(kwargs)
 
 
-# Managing remote systems
+###########################
+# Managing remote systems #
+###########################
 
 
 class cifsShare:
@@ -244,8 +266,6 @@ class host:
 
 
 class hostContainer:
-    """
-    """
     def __init__(self, serviceType, targetName, targetAddress, username, password, **kwargs):
         vasa_params = {'localUsername', 'localPassword'}
         self.serviceType = serviceType
@@ -291,7 +311,9 @@ class remoteSystem:
         self.__dict__.update(kwargs)
 
 
-# Managing storage
+####################
+# Managing storage #
+####################
 
 
 class capabilityProfile:
@@ -341,8 +363,15 @@ class treeQuota:
         self.path = path
         self.__dict__.update(kwargs)
 
-
-## Storage resources (LUN, ConsistencyGroup, VMwareLun, VMwareNFS, Filesystem, VVol)
+#########################
+# Storage resources     #
+# - LUN                 #
+# - ConsistencyGroup    #
+# - VMwareLun           #
+# - VMwareNFS           #
+# - Filesystem          #
+# - VVol                #
+#########################
 
 class lunParameters:
     """
@@ -432,7 +461,10 @@ class userQuota:
         self.__dict__.update(kwargs)
 
 
-# Managing the environment
+############################
+# Managing the environment #
+############################
+
 
 class kmipServer:
     def __init__(self, addresses: list, port, timeout, username, password):
@@ -442,8 +474,9 @@ class kmipServer:
         self.username = username
         self.password = password
 
-
-# Managing the system
+#######################
+# Managing the system #
+#######################
 
 class remoteSyslog:
     def __init__(self, address, **kwargs):
@@ -454,7 +487,9 @@ class remoteSyslog:
 ## Under Managing the environment, the following resources need classes:
 ##      importSession, softwareUpgradeSession, upgradeSession
 
-# Protecting data
+###################
+# Protecting data #
+###################
 
 class ldapServer:
     def __init__(self, bindDN, bindPassword, userSearchPath, groupSearchPath, **kwargs):
@@ -521,4 +556,3 @@ class user:
         self.user = user
         self.role = role
         self.password = password
-

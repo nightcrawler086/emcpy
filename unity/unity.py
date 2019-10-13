@@ -23,7 +23,6 @@ class Unity:
         self.password = password
         self.session = None
         self.storageResource = None
-        self.fsnPort = None
 
     def __getattr__(self, attr):
         """
@@ -100,7 +99,6 @@ class Unity:
             session.headers.update({'EMC-CSRF-TOKEN': token})
             self.session = session
             self.storageResource = storageResource(self.name, self.session)
-            self.fsnPort = fsnPort(self.name, self.session)
             if quiet is False:
                 return login.json()
 
@@ -397,15 +395,3 @@ class storageResource:
         obj = class_name(*kwargs)
         endpoint = 'https://{}/{}/{}/{}/{}'.format(self.name, 'api/instances/storageResource/', rid, 'action', action )
 
-
-class fsnPort:
-    def __init__(self, name, session):
-        self.name = name
-        self.session = session
-
-    def RecommendForInterface(self, sp: str):
-        endpoint = 'https://{}/{}'.format(self.name, 'api/types/fsnPort/action/recommendForInterface')
-        storageProcessor = classes.IdObject(sp)
-        body = Unity.jsonify(storageProcessor)
-        response = self.session.post(endpoint, data=body)
-        return response.json()
